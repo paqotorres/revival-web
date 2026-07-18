@@ -1,0 +1,57 @@
+---
+// Coordinates matched by player index in Hero.astro's `players` array.
+const locations = [
+  { lat: -34.63523824197615, lng: -58.5206891 }, // 0 Valdés - Vélez Sarsfield, Buenos Aires (Argentina)
+  { lat: -33.395787798087085, lng: -70.50067976146852 }, // 1 Cerezo - Universidad Católica, Santiago
+  { lat: -36.81522084504089, lng: -73.02365544782288 }, // 2 Montecinos - Deportes Concepción
+  { lat: -36.81522084504089, lng: -73.02365544782288 }, // 3 González - Universidad de Concepción
+  { lat: -36.61816325836906, lng: -72.1080987901605 }, // 4 Jeraldino - Ñublense, Chillán
+  { lat: -36.81522084504089, lng: -73.02365544782288 }, // 5 Cáceres - Deportes Concepción
+];
+---
+
+<div id="globe-wrapper" class="hidden xl:block absolute -right-16 2xl:right-0 top-28 z-10 w-[420px] h-[420px] rounded-full overflow-hidden">
+  <div id="globeViz" class="w-full h-full" data-locations={JSON.stringify(locations)}></div>
+</div>
+
+<script>
+  const container = document.getElementById('globeViz');
+  const wrapper = document.getElementById('globe-wrapper');
+
+  // Only load the (heavy) 3D globe library when the element is actually visible (xl+ screens).
+  if (container && wrapper && getComputedStyle(wrapper).display !== 'none') {
+    import('globe.gl').then(({ default: Globe }) => {
+      const locations = JSON.parse(container.dataset.locations ?? '[]');
+      const size = container.clientWidth || 240;
+      const colorInterpolator = (t: number) => `rgba(34, 197, 94, ${Math.sqrt(1 - t)})`;
+
+      const globe = new Globe()(container)
+        .globeImageUrl('https://unpkg.com/three-globe@2.45.2/example/img/earth-night.jpg')
+        .backgroundColor('rgba(0,0,0,0)')
+        .width(size)
+        .height(size)
+        .ringsData([locations[0]])
+        .ringColor(() => colorInterpolator)
+        .ringMaxRadius(3.2)
+        .ringPropagationSpeed(2)
+        .ringRepeatPeriod(1200)
+        .pointOfView({ lat: locations[0].lat, lng: locations[0].lng, altitude: 2 }, 0);
+
+      globe.controls().enableZoom = false;
+      globe.controls().enabled = false;
+      globe.globeMaterial().opacity = 0.9;
+
+      function updateGlobe(index: number) {
+        const loc = locations[index];
+        if (!loc) return;
+        globe.ringsData([loc]);
+        globe.pointOfView({ lat: loc.lat, lng: loc.lng, altitude: 2 }, 1400);
+      }
+
+      document.addEventListener('revival:player-change', (e) => {
+        const detail = (e as CustomEvent).detail;
+        if (typeof detail?.index === 'number') updateGlobe(detail.index);
+      });
+    });
+  }
+</script>

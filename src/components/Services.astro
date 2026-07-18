@@ -1,0 +1,47 @@
+---
+import { getT, type Lang } from '../i18n/translations';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'es' } = Astro.props;
+const t = getT(lang);
+
+const icons = [
+  'M12 4.5l7.5 4.33v6.34L12 19.5l-7.5-4.33V8.83L12 4.5z',
+  'M3 3v18h18M7 14l4-4 3 3 5-6',
+  'M17 8l4 4-4 4M7 8l-4 4 4 4M14 4l-4 16',
+];
+
+const services = t.services.items.map((item, i) => ({ ...item, icon: icons[i] }));
+---
+
+<section id="servicios" class="relative z-0 py-28 md:py-36 bg-ink-soft overflow-hidden">
+  <div class="mx-auto max-w-7xl px-6 lg:px-10">
+    <div data-reveal class="text-center max-w-2xl mx-auto mb-16">
+      <p class="text-gold uppercase tracking-[0.3em] text-xs mb-4">{t.services.eyebrow}</p>
+      <h2 class="font-display uppercase text-4xl md:text-5xl leading-tight text-bone">
+        {t.services.headingPre} <span class="text-gradient-gold">{t.services.headingHighlight}</span>
+      </h2>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-8">
+      {
+        services.map((service, i) => (
+          <div
+            data-reveal
+            data-reveal-delay={String(Math.min(i + 1, 4))}
+            class="group border border-white/10 p-8 hover:border-gold/60 transition-colors bg-ink/40"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-gold mb-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d={service.icon} />
+            </svg>
+            <h3 class="font-display text-xl uppercase text-bone mb-3">{service.title}</h3>
+            <p class="text-bone/60 text-sm leading-relaxed">{service.description}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

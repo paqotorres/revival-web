@@ -1,0 +1,620 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import PlayerCard from './PlayerCard.astro';
+import { getT, type Lang } from '../i18n/translations';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'es' } = Astro.props;
+const t = getT(lang);
+
+function slugify(name: string) {
+  return name
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+}
+
+const webpPhotos = new Set(['Moisés González', 'Joaquín Montecinos']);
+
+function getAvatarPath(name: string): string | undefined {
+  const ext = webpPhotos.has(name) ? 'webp' : 'jpg';
+  const filename = `${slugify(name)}.${ext}`;
+  const fullPath = path.join(process.cwd(), 'public', 'fichas', filename);
+  return fs.existsSync(fullPath) ? `/fichas/${filename}` : undefined;
+}
+
+const transfermarktLinks: Record<string, string> = {
+  'Diego Valdés': 'https://www.transfermarkt.mx/diego-valdes/erfolge/spieler/249776',
+  'Bernardo Cerezo': 'https://www.transfermarkt.mx/bernardo-cerezo/profil/spieler/251047',
+  'Joaquín Montecinos': 'https://www.transfermarkt.mx/joaquin-montecinos/profil/spieler/319471',
+  'Moisés González': 'https://www.transfermarkt.mx/moises-gonzalez/profil/spieler/695979',
+  'Ignacio Jeraldino': 'https://www.transfermarkt.mx/ignacio-jeraldino/profil/spieler/203150',
+  'Ariel Cáceres': 'https://www.transfermarkt.mx/ariel-caceres/profil/spieler/604551',
+
+  'Luis Ureta': 'https://www.transfermarkt.com/luis-ureta/profil/spieler/401714',
+  'José Alburquenque': 'https://www.transfermarkt.com/jose-alburquenque/profil/spieler/1335295',
+  'Jorge Espejo': 'https://www.transfermarkt.com/jorge-espejo/profil/spieler/879231',
+  'Javier Saldías': 'https://www.transfermarkt.com/javier-saldias/profil/spieler/843335',
+  'Sebastián Acuña': 'https://www.transfermarkt.com/sebastian-acuna/profil/spieler/1151373',
+  'Diego Carrasco': 'https://www.transfermarkt.com/diego-carrasco/profil/spieler/534284',
+  'Cristóbal Muñoz': 'https://www.transfermarkt.com/cristobal-munoz/profil/spieler/698322',
+  'Michael Maturana': 'https://www.transfermarkt.com/michael-maturana/profil/spieler/1238948',
+  'Patricio Romero': 'https://www.transfermarkt.com/patricio-romero/profil/spieler/1229030',
+  'Sebastián Jaramillo': 'https://www.transfermarkt.es/sebastian-jaramillo/profil/spieler/1520608',
+
+  'Benjamín Sáez': 'https://www.transfermarkt.es/benjamin-saez/profil/spieler/1428874',
+  'Taizo Bahamondez': 'https://www.transfermarkt.us/taizo-bahamondez/profil/spieler/1177392',
+  'Ítalo Pastén': 'https://www.transfermarkt.us/italo-pasten/profil/spieler/1561159',
+  'Alfred Canales': 'https://www.transfermarkt.us/alfred-canales/profil/spieler/740261',
+  'Martin Carreño': 'https://www.transfermarkt.us/martin-carreno/profil/spieler/1015305',
+  'Iván Ledezma': 'https://www.transfermarkt.us/ivan-ledezma/profil/spieler/345734',
+  'Lucas Cornejo': 'https://www.transfermarkt.us/lucas-cornejo/profil/spieler/1266380',
+  'Gonzalo Álvarez': 'https://www.transfermarkt.us/gonzalo-alvarez/profil/spieler/533444',
+  'Matías Osorio': 'https://www.transfermarkt.us/matias-osorio/profil/spieler/986824',
+  'Fabián Abarca': 'https://www.transfermarkt.us/fabian-abarca/profil/spieler/1247547',
+
+  'Juan Garrido': 'https://www.transfermarkt.pt/juan-garrido/profil/spieler/1511761',
+  'Francisco Herrera': 'https://www.transfermarkt.us/francisco-herrera/profil/spieler/209883',
+  'Benjamín Droguett': 'https://www.transfermarkt.us/benjamin-droguett/profil/spieler/1234658',
+  'Seba Díaz': 'https://www.transfermarkt.us/sebastian-diaz/profil/spieler/352339',
+  'Jordan Mella': 'https://www.transfermarkt.us/jordan-mella/profil/spieler/1268420',
+  'Dennis Leyton': 'https://www.transfermarkt.us/dennis-leyton/profil/spieler/1532821',
+  'Franco Cáceres': 'https://www.transfermarkt.us/franco-caceres/profil/spieler/1507332',
+  'Claudio Toro': 'https://www.transfermarkt.us/claudio-toro/profil/spieler/1560961',
+  'Francisco Espoz': 'https://www.transfermarkt.com.ar/francisco-espoz/profil/spieler/1403604',
+  'Joaquín Alfaro': 'https://www.transfermarkt.us/joaquin-alfaro/profil/spieler/1442940',
+
+  'Ignacio Mesías': 'https://www.transfermarkt.com/ignacio-mesias/profil/spieler/533446',
+  'Vicente Vera': 'https://www.transfermarkt.com/vicente-vera/profil/spieler/1230415',
+  'Matías Belmar': 'https://www.transfermarkt.com/matias-belmar/profil/spieler/662754',
+  'Sergio Carrasco': 'https://www.transfermarkt.com/sergio-carrasco/profil/spieler/881163',
+  'Joel Ahumada': 'https://www.transfermarkt.com/joel-ahumada/profil/spieler/1540601',
+  'Martin Espinoza': 'https://www.transfermarkt.com/martin-espinoza/profil/spieler/1117887',
+  'Esteban Gallardo': 'https://www.transfermarkt.com/esteban-gallardo/profil/spieler/1536107',
+  'Matías Sepúlveda': 'https://www.transfermarkt.com/matias-sepulveda/profil/spieler/1238945',
+  'Cristopher Fredes': 'https://www.transfermarkt.us/cristopher-fredes/profil/spieler/1372579',
+  'Alberto Tejerina': 'https://www.transfermarkt.com/alberto-tejerina/profil/spieler/1388306',
+};
+
+const videoLinks: Record<string, string> = {
+  'Gonzalo Álvarez': 'https://vimeo.com/1144016353/0ac2557718',
+  'Alfred Canales': 'https://vimeo.com/1188919718/1da4472b97',
+  'Diego Valdés': 'https://vimeo.com/1189934515/b2ab8ab759',
+  'Vicente Vargas': 'https://vimeo.com/1190039859/52170a753c',
+  'Jorge Espejo': 'https://vimeo.com/1074528864/527dbb5e36',
+  'Joaquín Montecinos': 'https://vimeo.com/1107573503/6528d6b86e',
+  'Iván Ledezma': 'https://vimeo.com/1143689741/fe93b973ba',
+  'Seba Díaz': 'https://vimeo.com/1184260809/ed959afb7c',
+  'Taizo Bahamondez': 'https://vimeo.com/1177173187/2351b4646c',
+  'Nicolás Fuentes': 'https://vimeo.com/1131689868/1ca1697b1c?share=copy&fl=sv&fe=ci',
+  'Sergio Carrasco': 'https://vimeo.com/1177824579/f14341c7cd',
+  'Cristóbal Muñoz': 'https://vimeo.com/1108272707/dfda3e1668',
+  'Matías Osorio': 'https://vimeo.com/1130572090/0e5b51463d?share=copy&fl=sv&fe=ci',
+  'Michael Maturana': 'https://vimeo.com/1146079521/ea3bc82613',
+  'Bernardo Cerezo': 'https://vimeo.com/1177169357/2561052c7f',
+  'Javier Saldías': 'https://vimeo.com/1075553646/4e4b0981fc',
+  'Moisés González': 'https://vimeo.com/1080676105/a4b5955dee?tq=moisesgonzalez#t=169',
+  'Patricio Romero': 'https://vimeo.com/1111474766/5d57ee4ad7?tq=patricioromero#t=145',
+  'Martin Carreño': 'https://vimeo.com/1128012074/bdecb0b705?tq=martincarre%C3%B1o#t=355',
+  'Lucas Cornejo': 'https://vimeo.com/1209688981/4f9089eeb5?tq=lucascornejo#t=98',
+  'Franco Cáceres': 'https://vimeo.com/1129560441/82c20b80e4',
+  'Ignacio Jeraldino': 'https://vimeo.com/1107574418/4b9014a0af',
+  'Ignacio Mesías': 'https://vimeo.com/1145050543/b208e79b73?tq=IgnacioMes%C3%ADas#t=407',
+};
+
+const roster: { category: string; position: string; players: { name: string; club: string }[] }[] = [
+  {
+    category: 'Porteros',
+    position: 'Portero',
+    players: [
+      { name: 'Luis Ureta', club: 'Deportes Puerto Montt' },
+      { name: 'José Alburquenque', club: 'Lota Schwager' },
+      { name: 'Juan Garrido', club: 'Deportes Temuco' },
+    ],
+  },
+  {
+    category: 'Defensas',
+    position: 'Defensa',
+    players: [
+      { name: 'Bernardo Cerezo', club: 'Universidad Católica' },
+      { name: 'Jorge Espejo', club: 'Universidad de Concepción' },
+      { name: 'Javier Saldías', club: 'Unión La Calera' },
+      { name: 'Moisés González', club: 'Universidad de Concepción' },
+      { name: 'Ariel Cáceres', club: 'Deportes Concepción' },
+      { name: 'Sebastián Acuña', club: 'Rangers de Talca' },
+      { name: 'Diego Carrasco', club: 'Deportes Concepción' },
+      { name: 'Cristóbal Muñoz', club: 'Audax Italiano' },
+      { name: 'Michael Maturana', club: 'Unión La Calera' },
+      { name: 'Patricio Romero', club: 'Universidad de Concepción' },
+      { name: 'Sebastián Jaramillo', club: 'Santiago Wanderers' },
+      { name: 'Benjamín Sáez', club: 'Universidad de Concepción' },
+      { name: 'Taizo Bahamondez', club: 'Santiago Wanderers' },
+      { name: 'Ítalo Pastén', club: 'Audax Italiano' },
+    ],
+  },
+  {
+    category: 'Mediocampistas',
+    position: 'Mediocampista',
+    players: [
+      { name: 'Diego Valdés', club: 'Vélez Sarsfield' },
+      { name: 'Joaquín Montecinos', club: 'Deportes Concepción' },
+      { name: 'Alfred Canales', club: 'Universidad Católica' },
+      { name: 'Martin Carreño', club: 'San Luis' },
+      { name: 'Iván Ledezma', club: 'Deportes Copiapó' },
+      { name: 'Lucas Cornejo', club: 'Cobreloa' },
+      { name: 'Gonzalo Álvarez', club: 'Deportes Recoleta' },
+      { name: 'Matías Osorio', club: 'Magallanes' },
+      { name: 'Fabián Abarca', club: 'Trasandino' },
+      { name: 'Francisco Herrera', club: 'Universidad de Concepción' },
+      { name: 'Benjamín Droguett', club: 'Unión Española' },
+      { name: 'Seba Díaz', club: 'Deportes La Serena' },
+      { name: 'Jordan Mella', club: 'Trasandino' },
+      { name: 'Dennis Leyton', club: 'Cobresal' },
+      { name: 'Franco Cáceres', club: 'Deportes Concepción' },
+      { name: 'Claudio Toro', club: 'Deportes Concepción' },
+      { name: 'Francisco Espoz', club: 'Deportes Copiapó' },
+      { name: 'Joaquín Alfaro', club: 'Curicó Unido' },
+      { name: 'Vicente Vargas', club: 'Santiago Wanderers' },
+      { name: 'Nicolás Fuentes', club: 'Santiago Wanderers' },
+      { name: 'Joaquín Oñate', club: 'Palestino' },
+    ],
+  },
+  {
+    category: 'Delanteros',
+    position: 'Delantero',
+    players: [
+      { name: 'Ignacio Jeraldino', club: 'Ñublense' },
+      { name: 'Ignacio Mesías', club: 'Rangers de Talca' },
+      { name: 'Vicente Vera', club: 'Santiago Wanderers' },
+      { name: 'Matías Belmar', club: 'Colchagua' },
+      { name: 'Sergio Carrasco', club: 'Cobresal' },
+      { name: 'Joel Ahumada', club: 'Audax Italiano' },
+      { name: 'Martin Espinoza', club: "O'Higgins" },
+      { name: 'Carlos Villodres', club: 'Unión Española' },
+      { name: 'Esteban Gallardo', club: 'Cobreloa' },
+      { name: 'Matías Sepúlveda', club: 'Cobresal' },
+      { name: 'Cristopher Fredes', club: 'Cobreloa' },
+      { name: 'Alberto Tejerina', club: 'Cobreloa' },
+    ],
+  },
+];
+
+const players = roster.flatMap((group) =>
+  group.players.map((player) => ({
+    ...player,
+    position: group.position,
+    category: group.category,
+    avatar: getAvatarPath(player.name),
+    transfermarkt: transfermarktLinks[player.name],
+    video: videoLinks[player.name],
+  }))
+);
+
+const filters = ['Todos', 'Porteros', 'Defensas', 'Mediocampistas', 'Delanteros'];
+---
+
+<section id="jugadores" class="relative z-0 py-28 md:py-36 bg-ink overflow-hidden">
+  <div class="mx-auto max-w-7xl px-6 lg:px-10">
+    <div data-reveal class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10">
+      <div>
+        <p class="text-gold uppercase tracking-[0.3em] text-xs mb-4">{t.players.eyebrow}</p>
+        <h2 class="font-display uppercase text-4xl md:text-5xl leading-tight text-bone">
+          {t.players.headingPre} <span class="text-gradient-gold">{t.players.headingHighlight}</span>
+        </h2>
+      </div>
+      <p class="text-bone/60 max-w-sm">
+        {t.players.subtext}
+      </p>
+    </div>
+
+    <div data-reveal class="flex flex-wrap gap-3 mb-10">
+      {
+        filters.map((filter) => (
+          <button
+            type="button"
+            data-filter={filter}
+            class="player-filter text-xs uppercase tracking-widest px-5 py-2.5 border border-white/15 text-bone/60 hover:border-gold hover:text-gold transition-colors data-[active=true]:bg-gold data-[active=true]:text-ink data-[active=true]:border-gold"
+            data-active={filter === 'Todos' ? 'true' : 'false'}
+          >
+            {t.players.filters[filter as keyof typeof t.players.filters]}
+          </button>
+        ))
+      }
+    </div>
+
+    <div data-reveal class="flex flex-wrap items-center gap-3 mb-10 -mt-4">
+      <span class="text-bone/40 text-xs uppercase tracking-widest">{t.players.sortLabel}</span>
+      {
+        (['default', 'name', 'club'] as const).map((sort) => (
+          <button
+            type="button"
+            data-sort={sort}
+            class="player-sort text-xs uppercase tracking-widest px-4 py-1.5 border border-white/10 text-bone/50 hover:border-gold hover:text-gold transition-colors data-[active=true]:bg-gold/10 data-[active=true]:border-gold data-[active=true]:text-gold"
+            data-active={sort === 'default' ? 'true' : 'false'}
+          >
+            {t.players.sortOptions[sort]}
+          </button>
+        ))
+      }
+    </div>
+
+    <div class="relative">
+      <div
+        id="players-grid"
+        class="flex items-start gap-5 overflow-x-auto overflow-y-hidden cursor-grab active:cursor-grabbing [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+      >
+        {
+          [0, 1, 2].map((copyIndex) =>
+            players.map((player) => (
+              <PlayerCard
+                name={player.name}
+                club={player.club}
+                position={t.players.positions[player.position as keyof typeof t.players.positions]}
+                category={player.category}
+                avatar={player.avatar}
+                transfermarkt={player.transfermarkt}
+                video={player.video}
+                copyIndex={copyIndex}
+                verTransfermarktLabel={t.players.verTransfermarkt}
+                verHighlightsLabel={t.players.verHighlights}
+                noStatsLabel={t.players.proximamente}
+              />
+            ))
+          )
+        }
+      </div>
+
+      <button
+        type="button"
+        id="players-prev"
+        aria-label={t.players.prevAria}
+        class="flex absolute top-1/2 -left-3 sm:-left-5 -translate-y-1/2 h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full border border-white/15 bg-ink text-bone/70 hover:border-gold hover:text-gold transition-colors"
+      >
+        ‹
+      </button>
+      <button
+        type="button"
+        id="players-next"
+        aria-label={t.players.nextAria}
+        class="flex absolute top-1/2 -right-3 sm:-right-5 -translate-y-1/2 h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full border border-white/15 bg-ink text-bone/70 hover:border-gold hover:text-gold transition-colors"
+      >
+        ›
+      </button>
+    </div>
+
+    <p id="players-empty" class="hidden text-center text-bone/50 text-sm mt-10">
+      {t.players.emptyState}
+    </p>
+
+    <div id="player-mobile-detail" class="hidden sm:hidden mt-6 border border-white/10 bg-ink-soft p-6">
+      <div class="flex items-start justify-between gap-4 mb-4">
+        <div>
+          <p id="mobile-detail-position" class="text-gold text-[11px] uppercase tracking-widest mb-1"></p>
+          <p id="mobile-detail-name" class="font-display text-xl text-bone leading-tight"></p>
+          <p id="mobile-detail-club" class="text-bone/50 text-sm mt-1"></p>
+        </div>
+        <button
+          type="button"
+          id="mobile-detail-close"
+          aria-label={t.players.cerrarAria}
+          class="shrink-0 h-8 w-8 flex items-center justify-center rounded-full border border-white/15 text-bone/70 hover:border-gold hover:text-gold transition-colors"
+        >
+          ✕
+        </button>
+      </div>
+
+      <div class="flex flex-col gap-3">
+        <a
+          id="mobile-detail-tm"
+          href="#"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="hidden w-full items-center justify-center gap-2 border border-gold text-gold px-5 py-3 text-xs uppercase tracking-widest hover:bg-gold hover:text-ink transition-colors"
+        >
+          {t.players.verTransfermarkt}
+        </a>
+        <a
+          id="mobile-detail-video"
+          href="#"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="hidden w-full items-center justify-center gap-2 border border-bone/30 text-bone px-5 py-3 text-xs uppercase tracking-widest hover:border-gold hover:text-gold transition-colors"
+        >
+          {t.players.verHighlights}
+        </a>
+      </div>
+      <p id="mobile-detail-no-stats" class="text-bone/40 text-xs">
+        {t.players.proximamente}
+      </p>
+    </div>
+  </div>
+</section>
+
+<script>
+  const filterButtons = document.querySelectorAll<HTMLButtonElement>('.player-filter');
+  const cards = document.querySelectorAll<HTMLElement>('.player-card');
+  const emptyState = document.getElementById('players-empty');
+  const grid = document.getElementById('players-grid');
+  const prevBtn = document.getElementById('players-prev');
+  const nextBtn = document.getElementById('players-next');
+
+  // Below this many unique players, there isn't enough content to loop
+  // through meaningfully (e.g. only 2 goalkeepers) — show a single static
+  // copy instead of the usual 3-copy infinite carousel.
+  const SMALL_SET_THRESHOLD = 4;
+
+  filterButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const filter = button.dataset.filter;
+
+      filterButtons.forEach((btn) => btn.setAttribute('data-active', String(btn === button)));
+
+      let matchingCount = 0;
+      cards.forEach((card) => {
+        if (filter === 'Todos' || card.dataset.category === filter) matchingCount++;
+      });
+      const smallSet = matchingCount > 0 && matchingCount / 3 <= SMALL_SET_THRESHOLD;
+
+      let visibleCount = 0;
+      cards.forEach((card) => {
+        const categoryMatches = filter === 'Todos' || card.dataset.category === filter;
+        const copyMatches = !smallSet || card.dataset.copy === '1';
+        const matches = categoryMatches && copyMatches;
+        card.classList.toggle('hidden', !matches);
+        if (matches) visibleCount++;
+      });
+
+      emptyState?.classList.toggle('hidden', visibleCount > 0);
+      updateCarouselMode(smallSet);
+      if (activeMobileCard?.classList.contains('hidden')) hideMobileDetail();
+    });
+  });
+
+  // --- Sorting: reorder cards within each of the 3 copies (by name or club),
+  // without touching which ones are visible (that's the filter's job).
+  const sortButtons = document.querySelectorAll<HTMLButtonElement>('.player-sort');
+  const originalCopies = [0, 1, 2].map((i) =>
+    Array.from(document.querySelectorAll<HTMLElement>(`.player-card[data-copy="${i}"]`))
+  );
+
+  function applySort(sort: string) {
+    const collator = new Intl.Collator('es', { sensitivity: 'base' });
+
+    originalCopies.forEach((copyCards, i) => {
+      const referenceNode = originalCopies[i + 1]?.[0] ?? null;
+      const ordered =
+        sort === 'default'
+          ? copyCards
+          : [...copyCards].sort((a, b) => collator.compare(a.dataset[sort] ?? '', b.dataset[sort] ?? ''));
+      ordered.forEach((card) => grid?.insertBefore(card, referenceNode));
+    });
+
+    updateCarouselMode(isSmallSet);
+  }
+
+  sortButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      sortButtons.forEach((btn) => btn.setAttribute('data-active', String(btn === button)));
+      applySort(button.dataset.sort ?? 'default');
+    });
+  });
+
+  // --- Infinite loop: content is rendered in 3 identical copies. Whenever the
+  // scroll position drifts into copy 1 or copy 3, jump silently by one copy's
+  // width so it always looks like it's the (identical) middle copy.
+  let isSmallSet = false;
+
+  function normalizeScroll() {
+    if (!grid || isSmallSet) return;
+    const setWidth = Math.round(grid.scrollWidth / 3);
+    if (!setWidth) return;
+    if (grid.scrollLeft >= setWidth * 2) {
+      grid.scrollLeft -= setWidth;
+    } else if (grid.scrollLeft < setWidth) {
+      grid.scrollLeft += setWidth;
+    }
+  }
+
+  function updateCarouselMode(smallSet: boolean) {
+    isSmallSet = smallSet;
+    if (!grid) return;
+
+    if (isSmallSet) {
+      stopAutoplay();
+      grid.scrollLeft = 0;
+      prevBtn?.classList.add('hidden');
+      nextBtn?.classList.add('hidden');
+    } else {
+      grid.scrollLeft = Math.round(grid.scrollWidth / 3);
+      prevBtn?.classList.remove('hidden');
+      nextBtn?.classList.remove('hidden');
+      syncAutoplay();
+    }
+  }
+
+  grid?.addEventListener('scroll', normalizeScroll, { passive: true });
+
+  function stepAmount() {
+    return window.matchMedia('(min-width: 640px)').matches ? 220 : 190;
+  }
+
+  // Clicking an arrow while the carousel is auto-scrolling would otherwise
+  // fight the continuous rAF-driven scroll, making the click appear to do
+  // nothing. Briefly pause autoplay for the duration of the smooth jump,
+  // then resume it automatically.
+  let resumeAutoplayTimer: ReturnType<typeof setTimeout> | null = null;
+
+  function nudge(direction: number) {
+    stopAutoplay();
+    grid?.scrollBy({ left: direction * stepAmount(), behavior: 'smooth' });
+    if (resumeAutoplayTimer) clearTimeout(resumeAutoplayTimer);
+    resumeAutoplayTimer = setTimeout(() => {
+      resumeAutoplayTimer = null;
+      syncAutoplay();
+    }, 500);
+  }
+
+  prevBtn?.addEventListener('click', () => nudge(-1));
+  nextBtn?.addEventListener('click', () => nudge(1));
+
+  // --- Autoplay: scroll continuously to the left at a steady pace. Paused
+  // while the mouse is over the carousel, while dragging, or while the mobile
+  // detail panel is open.
+  const AUTOPLAY_SPEED = 45; // px per second
+
+  let rafId: number | null = null;
+  let lastFrameTime: number | null = null;
+  let isHovering = false;
+  let isDragging = false;
+  let isMobileDetailOpen = false;
+
+  function tick(time: number) {
+    if (grid && lastFrameTime !== null) {
+      const dt = (time - lastFrameTime) / 1000;
+      grid.scrollLeft += AUTOPLAY_SPEED * dt;
+    }
+    lastFrameTime = time;
+    rafId = requestAnimationFrame(tick);
+  }
+
+  function startAutoplay() {
+    if (rafId !== null) return;
+    lastFrameTime = null;
+    rafId = requestAnimationFrame(tick);
+  }
+
+  function stopAutoplay() {
+    if (rafId !== null) cancelAnimationFrame(rafId);
+    rafId = null;
+    lastFrameTime = null;
+  }
+
+  function syncAutoplay() {
+    if (isSmallSet || isHovering || isDragging || isMobileDetailOpen) {
+      stopAutoplay();
+    } else {
+      startAutoplay();
+    }
+  }
+
+  updateCarouselMode(false);
+  grid?.addEventListener('mouseenter', () => {
+    isHovering = true;
+    syncAutoplay();
+  });
+  grid?.addEventListener('mouseleave', () => {
+    isHovering = false;
+    syncAutoplay();
+  });
+
+  // --- Free drag-to-scroll with the mouse on desktop.
+  let dragMoved = false;
+  let dragStartX = 0;
+  let dragStartScroll = 0;
+
+  grid?.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    dragMoved = false;
+    dragStartX = e.pageX;
+    dragStartScroll = grid.scrollLeft;
+    grid.classList.add('select-none');
+    syncAutoplay();
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    if (!isDragging || !grid) return;
+    const delta = e.pageX - dragStartX;
+    if (Math.abs(delta) > 5) dragMoved = true;
+    grid.scrollLeft = dragStartScroll - delta;
+  });
+
+  window.addEventListener('mouseup', () => {
+    if (!isDragging) return;
+    isDragging = false;
+    grid?.classList.remove('select-none');
+    syncAutoplay();
+  });
+
+  // Swallow the click that follows a drag so it doesn't trigger the mobile
+  // detail panel or a link navigation.
+  grid?.addEventListener(
+    'click',
+    (e) => {
+      if (dragMoved) {
+        e.preventDefault();
+        e.stopPropagation();
+        dragMoved = false;
+      }
+    },
+    true
+  );
+
+  const mobileDetail = document.getElementById('player-mobile-detail');
+  const mobileDetailClose = document.getElementById('mobile-detail-close');
+  const mobileDetailPosition = document.getElementById('mobile-detail-position');
+  const mobileDetailName = document.getElementById('mobile-detail-name');
+  const mobileDetailClub = document.getElementById('mobile-detail-club');
+  const mobileDetailTm = document.getElementById('mobile-detail-tm') as HTMLAnchorElement;
+  const mobileDetailVideo = document.getElementById('mobile-detail-video') as HTMLAnchorElement;
+  const mobileDetailNoStats = document.getElementById('mobile-detail-no-stats');
+
+  let activeMobileCard: HTMLElement | null = null;
+
+  function showMobileDetail(card: HTMLElement) {
+    const { name = '', club = '', position = '', transfermarkt = '', video = '' } = card.dataset;
+
+    if (mobileDetailName) mobileDetailName.textContent = name;
+    if (mobileDetailClub) mobileDetailClub.textContent = club;
+    if (mobileDetailPosition) mobileDetailPosition.textContent = position;
+
+    if (transfermarkt) {
+      mobileDetailTm.href = transfermarkt;
+      mobileDetailTm.classList.remove('hidden');
+      mobileDetailTm.classList.add('flex');
+    } else {
+      mobileDetailTm.classList.add('hidden');
+      mobileDetailTm.classList.remove('flex');
+    }
+
+    if (video) {
+      mobileDetailVideo.href = video;
+      mobileDetailVideo.classList.remove('hidden');
+      mobileDetailVideo.classList.add('flex');
+    } else {
+      mobileDetailVideo.classList.add('hidden');
+      mobileDetailVideo.classList.remove('flex');
+    }
+
+    mobileDetailNoStats?.classList.toggle('hidden', Boolean(transfermarkt || video));
+
+    activeMobileCard = card;
+    mobileDetail?.classList.remove('hidden');
+    mobileDetail?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    isMobileDetailOpen = true;
+    syncAutoplay();
+  }
+
+  function hideMobileDetail() {
+    mobileDetail?.classList.add('hidden');
+    activeMobileCard = null;
+    isMobileDetailOpen = false;
+    syncAutoplay();
+  }
+
+  cards.forEach((card) => {
+    card.addEventListener('click', () => {
+      if (activeMobileCard === card) {
+        hideMobileDetail();
+      } else {
+        showMobileDetail(card);
+      }
+    });
+  });
+  mobileDetailClose?.addEventListener('click', hideMobileDetail);
+</script>

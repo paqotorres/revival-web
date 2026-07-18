@@ -1,0 +1,33 @@
+---
+import { getT, type Lang } from '../i18n/translations';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'es' } = Astro.props;
+const t = getT(lang);
+---
+
+<section id="instagram" class="relative z-0 py-28 md:py-36 bg-ink overflow-hidden">
+  <div class="mx-auto max-w-7xl px-6 lg:px-10">
+    <div data-reveal class="text-center max-w-2xl mx-auto mb-16">
+      <p class="text-gold uppercase tracking-[0.3em] text-xs mb-4">{t.instagram.eyebrow}</p>
+      <h2 class="font-display uppercase text-4xl md:text-5xl leading-tight text-bone">
+        {t.instagram.headingPre} <span class="text-gradient-gold">@revivalfootball</span>
+      </h2>
+    </div>
+
+    <div data-reveal data-reveal-delay="1">
+      <behold-widget feed-id="2tIzTVxEtkEdOfRjchNJ"></behold-widget>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  (() => {
+    if (window.__bhldScript) return; window.__bhldScript = true;
+    const d = document, s = d.createElement("script"); s.type = "module";
+    s.src = "https://w.behold.so/widget.js"; setTimeout(() => { d.head.append(s); }, 0);
+  })();
+</script>

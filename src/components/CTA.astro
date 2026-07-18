@@ -1,0 +1,32 @@
+---
+import { getT, type Lang } from '../i18n/translations';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'es' } = Astro.props;
+const t = getT(lang);
+---
+
+<section class="relative z-0 py-28 md:py-36 bg-ink overflow-hidden">
+  <div class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,_rgba(34,197,94,0.15),_transparent_65%)]"></div>
+
+  <div class="mx-auto max-w-4xl px-6 text-center">
+    <p data-reveal class="text-gold uppercase tracking-[0.3em] text-xs mb-4">{t.cta.eyebrow}</p>
+    <h2 data-reveal data-reveal-delay="1" class="font-display uppercase text-4xl md:text-6xl leading-tight text-bone mb-8">
+      {t.cta.headingPre} <span class="text-gradient-gold">{t.cta.headingHighlight}</span>
+    </h2>
+    <p data-reveal data-reveal-delay="2" class="text-bone/70 max-w-xl mx-auto mb-10 leading-relaxed">
+      {t.cta.text}
+    </p>
+    <div data-reveal data-reveal-delay="3">
+      <a
+        href="mailto:ggonzalez@revivalfootball.com"
+        class="inline-flex items-center bg-gold text-ink px-10 py-4 text-sm uppercase tracking-widest font-medium hover:bg-gold-light transition-colors"
+      >
+        {t.cta.button}
+      </a>
+    </div>
+  </div>
+</section>

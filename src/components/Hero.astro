@@ -1,0 +1,421 @@
+---
+import FieldLines from './FieldLines.astro';
+import PlayerGlobe from './PlayerGlobe.astro';
+import { getT, type Lang } from '../i18n/translations';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'es' } = Astro.props;
+const t = getT(lang);
+
+const nationalities: Record<Lang, string> = { es: 'Chile', en: 'Chile' };
+
+const playersData = [
+  {
+    photo: '/valdes-clean.png',
+    avatar: '/valdes-avatar.png',
+    name: 'Valdés',
+    fullName: 'Diego Valdés',
+    club: 'Vélez Sársfield',
+    position: { es: 'Mediocentro ofensivo', en: 'Attacking Midfielder' },
+    transfermarkt: 'https://www.transfermarkt.mx/diego-valdes/erfolge/spieler/249776',
+  },
+  {
+    photo: '/cerezo-clean.png',
+    avatar: '/cerezo-avatar.png',
+    name: 'Cerezo',
+    fullName: 'Bernardo Cerezo',
+    club: 'Universidad Católica',
+    position: { es: 'Lateral derecho', en: 'Right Back' },
+    transfermarkt: 'https://www.transfermarkt.mx/bernardo-cerezo/profil/spieler/251047',
+  },
+  {
+    photo: '/montecinos-hero.webp',
+    avatar: '/montecinos-avatar.webp',
+    name: 'Montecinos',
+    fullName: 'Joaquín Montecinos',
+    club: 'Deportes Concepción',
+    position: { es: 'Extremo Derecho', en: 'Right Winger' },
+    transfermarkt: 'https://www.transfermarkt.mx/joaquin-montecinos/profil/spieler/319471',
+  },
+  {
+    photo: '/moises-clean.png',
+    avatar: '/moises-avatar.png',
+    name: 'González',
+    fullName: 'Moisés González',
+    club: 'Universidad de Concepción',
+    position: { es: 'Defensa Central', en: 'Center Back' },
+    transfermarkt: 'https://www.transfermarkt.mx/moises-gonzalez/profil/spieler/695979',
+  },
+  {
+    photo: '/jeraldino-clean.png',
+    avatar: '/jeraldino-avatar.png',
+    name: 'Jeraldino',
+    fullName: 'Ignacio Jeraldino',
+    club: 'Ñublense',
+    position: { es: 'Delantero Centro', en: 'Center Forward' },
+    transfermarkt: 'https://www.transfermarkt.mx/ignacio-jeraldino/profil/spieler/203150',
+  },
+  {
+    photo: '/ariel-clean.png',
+    avatar: '/ariel-avatar.png',
+    name: 'Cáceres',
+    fullName: 'Ariel Cáceres',
+    club: 'Deportes Concepción',
+    position: { es: 'Lateral Derecho', en: 'Right Back' },
+    transfermarkt: 'https://www.transfermarkt.mx/ariel-caceres/profil/spieler/604551',
+  },
+];
+
+const players = playersData.map((p) => ({
+  ...p,
+  position: p.position[lang],
+  nationality: nationalities[lang],
+}));
+
+const fadeMask =
+  'mask-image: linear-gradient(to bottom, black 78%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 78%, transparent 100%);';
+---
+
+<section id="top" class="relative z-0 overflow-hidden bg-ink pt-28 pb-8 md:pt-32">
+  <div id="hero-bg" class="absolute inset-0 -z-10">
+    <FieldLines class="absolute inset-0 w-full h-full opacity-[0.07]" />
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(34,197,94,0.18),_transparent_60%)]"></div>
+    <div class="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,10,10,0.2)_0%,rgba(10,10,10,0.85)_75%,rgba(10,10,10,1)_100%)]"></div>
+  </div>
+
+  <div class="px-6 relative">
+    <PlayerGlobe />
+
+    <div id="player-sidebar" class="hidden lg:flex lg:flex-col gap-2.5 lg:absolute lg:left-6 xl:left-12 lg:top-36 lg:z-10 lg:w-[280px]">
+      <button
+        id="sidebar-prev"
+        type="button"
+        class="sidebar-preview sidebar-preview-top flex items-center gap-2.5 rounded-xl border border-white/5 bg-white/[0.03] px-3.5 py-3 text-left opacity-80 hover:opacity-100 transition-opacity"
+        aria-label={t.hero.prevPlayer}
+      >
+        <img id="prev-avatar" src="" alt="" class="h-9 w-9 shrink-0 rounded-full object-cover border border-white/10" />
+        <div class="min-w-0">
+          <p id="prev-name" class="text-bone/80 text-sm truncate"></p>
+          <p id="prev-club" class="text-bone/40 text-[11px] truncate"></p>
+        </div>
+      </button>
+
+      <div
+        id="sidebar-current"
+        class="rounded-2xl border border-gold bg-white/[0.04] backdrop-blur-xl shadow-lg shadow-black/20 overflow-hidden"
+        style="box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.3), 0 10px 30px rgba(0, 0, 0, 0.3);"
+      >
+        <div class="px-3.5 pt-3.5 pb-3">
+          <div class="flex items-center gap-2.5 mb-3">
+            <img
+              id="current-avatar"
+              src=""
+              alt=""
+              class="h-11 w-11 shrink-0 rounded-full object-cover border-2 border-gold"
+            />
+            <div class="min-w-0">
+              <p class="text-[9px] uppercase tracking-widest text-bone/40">{t.hero.nombre}</p>
+              <p id="current-name" class="font-display text-bone text-sm leading-tight truncate"></p>
+            </div>
+          </div>
+
+          <dl class="space-y-1 text-[11px] border-t border-white/10 pt-2.5">
+            <div class="flex items-center justify-between gap-2">
+              <dt class="text-bone/40 uppercase tracking-wide">{t.hero.equipo}</dt>
+              <dd id="current-club" class="text-bone/80 text-right truncate"></dd>
+            </div>
+            <div class="flex items-center justify-between gap-2">
+              <dt class="text-bone/40 uppercase tracking-wide">{t.hero.posicion}</dt>
+              <dd id="current-position" class="text-bone/80 text-right truncate"></dd>
+            </div>
+            <div class="flex items-center justify-between gap-2">
+              <dt class="text-bone/40 uppercase tracking-wide">{t.hero.nacionalidad}</dt>
+              <dd id="current-nationality" class="text-bone/80 text-right truncate"></dd>
+            </div>
+          </dl>
+        </div>
+
+        <a
+          id="current-transfermarkt-link"
+          href="#"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="hidden items-center justify-end gap-1 border-t border-white/10 px-3.5 py-2.5 text-[11px] uppercase tracking-widest text-gold hover:bg-gold hover:text-ink transition-colors"
+        >
+          {t.hero.transfermarkt}
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17L17 7M17 7H8M17 7v9" />
+          </svg>
+        </a>
+        <p
+          id="current-transfermarkt-placeholder"
+          class="hidden items-center justify-end border-t border-white/10 px-3.5 py-2.5 text-[11px] uppercase tracking-widest text-bone/30"
+        >
+          {t.hero.proximamente}
+        </p>
+      </div>
+
+      <button
+        id="sidebar-next"
+        type="button"
+        class="sidebar-preview sidebar-preview-bottom flex items-center gap-2.5 rounded-xl border border-white/5 bg-white/[0.03] px-3.5 py-3 text-left opacity-80 hover:opacity-100 transition-opacity"
+        aria-label={t.hero.nextPlayer}
+      >
+        <img id="next-avatar" src="" alt="" class="h-9 w-9 shrink-0 rounded-full object-cover border border-white/10" />
+        <div class="min-w-0">
+          <p id="next-name" class="text-bone/80 text-sm truncate"></p>
+          <p id="next-club" class="text-bone/40 text-[11px] truncate"></p>
+        </div>
+      </button>
+
+      <a
+        href="#jugadores"
+        class="mt-1 flex items-center justify-center rounded-xl border border-bone/20 px-4 py-2.5 text-xs uppercase tracking-widest text-bone/70 hover:border-gold hover:text-gold transition-colors"
+      >
+        {t.hero.verJugadores}
+      </a>
+    </div>
+
+    <div class="mx-auto max-w-7xl">
+      <p data-reveal class="text-gold text-center uppercase tracking-[0.3em] text-xs md:text-sm mb-2">
+        {t.hero.eyebrow}
+      </p>
+
+      <div class="relative z-0 mx-auto max-w-6xl h-[74vh] md:h-[85vh]">
+        <div
+          aria-hidden="true"
+          class="absolute inset-x-0 top-0 -z-10 flex flex-col items-center leading-[0.8] select-none pointer-events-none"
+        >
+          <span class="font-display font-bold uppercase text-bone text-[15vw] md:text-[8.5vw]">Revival</span>
+          <span class="font-display font-bold uppercase text-bone text-[15vw] md:text-[8.5vw]">Football</span>
+        </div>
+
+        <div id="player-carousel" class="relative h-full">
+          {
+            players.map((player, i) => (
+              <div
+                class="player-slide absolute inset-0 flex items-end justify-center transition-opacity duration-700 ease-in-out"
+                class:list={[i === 0 ? 'opacity-100' : 'opacity-0 pointer-events-none']}
+                data-index={i}
+                data-name={player.name}
+              >
+                <img
+                  src={player.photo}
+                  alt={player.name}
+                  style={fadeMask}
+                  class="h-[52vh] md:h-[62vh] w-auto object-contain transition-transform duration-500 ease-out hover:scale-105 cursor-pointer"
+                />
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <p
+        id="player-name"
+        data-reveal
+        data-reveal-delay="2"
+        class="text-center font-display uppercase text-bone/15 text-4xl sm:text-5xl md:text-7xl tracking-[0.15em] -mt-2 md:-mt-4"
+      >
+        {players[0].name}
+      </p>
+
+      <div class="flex justify-center lg:hidden gap-2 mt-5">
+        {
+          players.map((_, i) => (
+            <button
+              type="button"
+              class="carousel-dot h-2 w-2 rounded-full bg-bone/20 hover:bg-bone/50 transition-colors"
+              data-index={i}
+              data-active={i === 0 ? 'true' : 'false'}
+              aria-label={`${t.hero.verJugadorAria} ${i + 1}`}
+            />
+          ))
+        }
+      </div>
+
+      <h2
+        data-reveal
+        data-reveal-delay="3"
+        class="text-center font-display font-semibold uppercase text-bone text-3xl sm:text-4xl md:text-5xl leading-tight mt-8 md:mt-12"
+      >
+        {t.hero.headingLine1}
+        <br />
+        <span class="inline-block bg-gold text-ink px-2 md:px-3 rounded-md">{t.hero.headingLine2}</span>
+      </h2>
+    </div>
+
+    <div class="mx-auto max-w-2xl text-center mt-6 md:mt-10">
+      <p data-reveal data-reveal-delay="4" class="text-bone/70 text-base md:text-lg leading-relaxed">
+        {t.hero.subtext}
+      </p>
+
+      <div data-reveal data-reveal-delay="4" class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a
+          href="mailto:ggonzalez@revivalfootball.com"
+          class="w-full sm:w-auto text-center bg-gold text-ink px-8 py-4 text-sm uppercase tracking-widest font-medium hover:bg-gold-light transition-colors"
+        >
+          {t.hero.contactarRevival}
+        </a>
+        <a
+          href="#jugadores"
+          class="w-full sm:w-auto text-center border border-bone/30 text-bone px-8 py-4 text-sm uppercase tracking-widest hover:border-gold hover:text-gold transition-colors"
+        >
+          {t.hero.verJugadoresBtn}
+        </a>
+      </div>
+    </div>
+
+    <div data-reveal data-reveal-delay="4" class="mt-14 md:mt-20 flex items-start justify-center gap-6 md:gap-8">
+      <div class="text-right">
+        <p class="font-display text-3xl md:text-4xl text-gold">+45</p>
+        <p class="text-bone/50 text-xs uppercase tracking-widest mt-1">{t.hero.statPlayers}</p>
+      </div>
+      <div class="border-l border-white/10 pl-6 md:pl-8">
+        <p class="font-display text-3xl md:text-4xl text-gold">+15</p>
+        <p class="text-bone/50 text-xs uppercase tracking-widest mt-1">{t.hero.statYears}</p>
+      </div>
+    </div>
+
+    <p data-reveal data-reveal-delay="4" class="mt-6 text-center text-bone/30 text-[11px] uppercase tracking-widest">
+      {t.hero.license}
+    </p>
+  </div>
+</section>
+
+<script define:vars={{ players }}>
+  const heroBg = document.getElementById('hero-bg');
+  document.addEventListener(
+    'scroll',
+    () => {
+      const y = window.scrollY;
+      if (heroBg) heroBg.style.transform = `translateY(${y * 0.25}px)`;
+    },
+    { passive: true }
+  );
+
+  const slides = Array.from(document.querySelectorAll('.player-slide'));
+  const dots = Array.from(document.querySelectorAll('.carousel-dot'));
+  const nameEl = document.getElementById('player-name');
+
+  const prevBtn = document.getElementById('sidebar-prev');
+  const nextBtn = document.getElementById('sidebar-next');
+  const prevAvatar = document.getElementById('prev-avatar');
+  const prevName = document.getElementById('prev-name');
+  const prevClub = document.getElementById('prev-club');
+  const nextAvatar = document.getElementById('next-avatar');
+  const nextName = document.getElementById('next-name');
+  const nextClub = document.getElementById('next-club');
+  const curAvatar = document.getElementById('current-avatar');
+  const curName = document.getElementById('current-name');
+  const curClub = document.getElementById('current-club');
+  const curPosition = document.getElementById('current-position');
+  const curNationality = document.getElementById('current-nationality');
+  const curTmLink = document.getElementById('current-transfermarkt-link');
+  const curTmPlaceholder = document.getElementById('current-transfermarkt-placeholder');
+
+  let current = 0;
+  let timer;
+
+  function updateSidebar(index) {
+    const n = players.length;
+    const prevIdx = (index - 1 + n) % n;
+    const nextIdx = (index + 1) % n;
+    const cur = players[index];
+    const prev = players[prevIdx];
+    const next = players[nextIdx];
+
+    if (curAvatar) { curAvatar.src = cur.avatar; curAvatar.alt = cur.fullName; }
+    if (curName) curName.textContent = cur.fullName;
+    if (curClub) curClub.textContent = cur.club;
+    if (curPosition) curPosition.textContent = cur.position;
+    if (curNationality) curNationality.textContent = cur.nationality;
+
+    if (cur.transfermarkt) {
+      curTmLink?.setAttribute('href', cur.transfermarkt);
+      curTmLink?.classList.remove('hidden');
+      curTmLink?.classList.add('flex');
+      curTmPlaceholder?.classList.add('hidden');
+      curTmPlaceholder?.classList.remove('flex');
+    } else {
+      curTmLink?.classList.add('hidden');
+      curTmLink?.classList.remove('flex');
+      curTmPlaceholder?.classList.remove('hidden');
+      curTmPlaceholder?.classList.add('flex');
+    }
+
+    if (prevAvatar) { prevAvatar.src = prev.avatar; prevAvatar.alt = prev.fullName; }
+    if (prevName) prevName.textContent = prev.fullName;
+    if (prevClub) prevClub.textContent = `${prev.club} · ${prev.position}`;
+    prevBtn?.setAttribute('data-index', String(prevIdx));
+
+    if (nextAvatar) { nextAvatar.src = next.avatar; nextAvatar.alt = next.fullName; }
+    if (nextName) nextName.textContent = next.fullName;
+    if (nextClub) nextClub.textContent = `${next.club} · ${next.position}`;
+    nextBtn?.setAttribute('data-index', String(nextIdx));
+  }
+
+  function goTo(index) {
+    slides.forEach((slide, i) => {
+      slide.classList.toggle('opacity-100', i === index);
+      slide.classList.toggle('opacity-0', i !== index);
+      slide.classList.toggle('pointer-events-none', i !== index);
+    });
+    dots.forEach((dot, i) => dot.setAttribute('data-active', String(i === index)));
+    const activeSlide = slides[index];
+    if (nameEl && activeSlide) nameEl.textContent = activeSlide.dataset.name ?? '';
+    current = index;
+    updateSidebar(index);
+    document.dispatchEvent(new CustomEvent('revival:player-change', { detail: { index } }));
+  }
+
+  function restartAutoplay() {
+    clearInterval(timer);
+    timer = setInterval(() => goTo((current + 1) % slides.length), 3000);
+  }
+
+  dots.forEach((dot) => {
+    dot.addEventListener('click', () => {
+      goTo(Number(dot.dataset.index));
+      restartAutoplay();
+    });
+  });
+
+  prevBtn?.addEventListener('click', () => {
+    goTo(Number(prevBtn.dataset.index));
+    restartAutoplay();
+  });
+
+  nextBtn?.addEventListener('click', () => {
+    goTo(Number(nextBtn.dataset.index));
+    restartAutoplay();
+  });
+
+  updateSidebar(0);
+  if (slides.length > 1) restartAutoplay();
+</script>
+
+<style>
+  .carousel-dot[data-active='true'] {
+    background-color: var(--color-gold);
+    width: 1.5rem;
+    border-radius: 9999px;
+  }
+
+  .sidebar-preview {
+    transform: scale(0.94);
+  }
+
+  .sidebar-preview-top {
+    mask-image: linear-gradient(to bottom, transparent 0%, black 75%);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 75%);
+  }
+
+  .sidebar-preview-bottom {
+    mask-image: linear-gradient(to bottom, black 25%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 25%, transparent 100%);
+  }
+</style>

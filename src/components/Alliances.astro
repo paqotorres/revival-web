@@ -1,0 +1,32 @@
+---
+import { getT, type Lang } from '../i18n/translations';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'es' } = Astro.props;
+const t = getT(lang);
+---
+
+<section id="alianzas" class="relative z-0 py-28 md:py-36 bg-ink overflow-hidden">
+  <div class="mx-auto max-w-4xl px-6 lg:px-10 text-center">
+    <p data-reveal class="text-gold uppercase tracking-[0.3em] text-xs mb-4">{t.alliances.eyebrow}</p>
+    <p data-reveal data-reveal-delay="1" class="text-bone/70 max-w-2xl mx-auto leading-relaxed mb-14">
+      {t.alliances.text}
+    </p>
+
+    <div data-reveal data-reveal-delay="2" class="flex flex-wrap items-center justify-center gap-8">
+      <img
+        src="/transferroom.jpg"
+        alt="TransferRoom"
+        class="w-36 h-36 sm:w-40 sm:h-40 rounded-2xl object-cover shadow-lg"
+      />
+      <img
+        src="/transfermarkt.jpg"
+        alt="Transfermarkt"
+        class="w-36 h-36 sm:w-40 sm:h-40 rounded-2xl object-cover shadow-lg"
+      />
+    </div>
+  </div>
+</section>

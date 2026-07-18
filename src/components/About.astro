@@ -1,0 +1,56 @@
+---
+import { getT, type Lang } from '../i18n/translations';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'es' } = Astro.props;
+const t = getT(lang);
+---
+
+<section id="nosotros" class="relative z-0 py-16 md:py-20 bg-ink overflow-hidden">
+  <div class="mx-auto max-w-7xl px-6 lg:px-10 grid md:grid-cols-2 gap-14 items-start">
+    <div data-reveal>
+      <p class="text-gold uppercase tracking-[0.3em] text-xs mb-4">{t.about.eyebrow}</p>
+      <h2 class="font-display uppercase text-4xl md:text-5xl leading-tight text-bone mb-6">
+        {t.about.headingPre} <span class="text-gradient-gold">{t.about.headingHighlight}</span>
+      </h2>
+      <p class="text-bone/70 leading-relaxed mb-6">
+        {t.about.p1Pre}{' '}
+        <span class="text-bone font-medium">{t.about.p1Name}</span>{t.about.p1Post}
+      </p>
+      <p class="text-bone/70 leading-relaxed mb-6">
+        {t.about.p2}
+      </p>
+      <p class="text-bone/70 leading-relaxed mb-6">
+        {t.about.p3Pre}{' '}
+        <span class="text-bone font-medium">{t.about.p3Highlight}</span>.
+      </p>
+
+      <div class="flex flex-wrap items-center gap-6 mt-8">
+        {['FIFA', 'CONMEBOL', 'CONCACAF', 'UEFA', 'AFC'].map((org) => (
+          <img src={`/${org}.svg`} alt={org} class="h-6 md:h-7 w-auto opacity-70 hover:opacity-100 transition-opacity" />
+        ))}
+      </div>
+    </div>
+
+    <div data-reveal data-reveal-delay="1" class="relative">
+      <div class="aspect-[4/5] w-full border border-white/10 bg-gradient-to-br from-ink-soft to-ink relative overflow-hidden">
+        <img
+          src="/gaston.jpg"
+          alt={t.about.founderName}
+          class="absolute inset-0 w-full h-full object-cover"
+        />
+        <div class="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-ink via-ink/60 to-transparent">
+          <p class="font-display text-2xl text-bone">{t.about.founderName}</p>
+          <p class="text-gold text-sm uppercase tracking-widest mt-1">{t.about.founderTitle}</p>
+        </div>
+      </div>
+      <div class="absolute -bottom-6 -right-6 hidden sm:block bg-gold text-ink px-6 py-4">
+        <p class="font-display text-3xl leading-none">15+</p>
+        <p class="text-xs uppercase tracking-widest mt-1">{t.about.yearsBadge}</p>
+      </div>
+    </div>
+  </div>
+</section>
