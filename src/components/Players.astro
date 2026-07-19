@@ -20,11 +20,8 @@ function slugify(name: string) {
     .replace(/(^-|-$)/g, '');
 }
 
-const webpPhotos = new Set(['Moisés González', 'Joaquín Montecinos']);
-
 function getAvatarPath(name: string): string | undefined {
-  const ext = webpPhotos.has(name) ? 'webp' : 'jpg';
-  const filename = `${slugify(name)}.${ext}`;
+  const filename = `${slugify(name)}.webp`;
   const fullPath = path.join(process.cwd(), 'public', 'fichas', filename);
   return fs.existsSync(fullPath) ? `/fichas/${filename}` : undefined;
 }
