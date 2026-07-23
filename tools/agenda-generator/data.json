@@ -1,0 +1,20 @@
+{
+  "date": "VIERNES 24 JULIO",
+  "tag": "PROYECCIÓN",
+  "matches": [
+    {
+      "competition": "Sub 20",
+      "time": "08:30HRS CHILE",
+      "teamA": "union española",
+      "teamB": "cobreloa",
+      "players": ["Alberto Tejerina", "Lucas Cornejo"]
+    },
+    {
+      "competition": "Sub 20",
+      "time": "13:00HRS CHILE",
+      "teamA": "huachipato",
+      "teamB": "deportes temuco",
+      "players": ["Franco Gutiérrez", "Juan Garrido"]
+    }
+  ]
+}
