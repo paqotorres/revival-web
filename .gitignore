@@ -24,5 +24,8 @@ pnpm-debug.log*
 unused-assets/
 *.zip
 
+# generated agenda story images (regenerated on demand, not site content)
+tools/agenda-generator/output/
+
 # jetbrains setting folder
 .idea/
