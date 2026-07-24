@@ -45,11 +45,11 @@ function initials(name) {
 // Pick a grid density so N cards fill ~1080x1920 without overflow, regardless
 // of how many matches/players are in a given day's agenda.
 function pickLayout(count) {
-  if (count <= 2) return { cols: 1, aspect: '4 / 3', nameSize: 40, metaSize: 24, crestSize: 64 };
-  if (count <= 4) return { cols: 2, aspect: '1 / 1.15', nameSize: 32, metaSize: 20, crestSize: 56 };
-  if (count <= 6) return { cols: 2, aspect: '1 / 0.85', nameSize: 28, metaSize: 18, crestSize: 48 };
-  if (count <= 9) return { cols: 3, aspect: '1 / 1.1', nameSize: 24, metaSize: 16, crestSize: 42 };
-  return { cols: 4, aspect: '1 / 1', nameSize: 20, metaSize: 14, crestSize: 36 };
+  if (count <= 2) return { cols: 1, aspect: '4 / 3', nameSize: 40, metaSize: 24, crestSize: 92 };
+  if (count <= 4) return { cols: 2, aspect: '1 / 1.15', nameSize: 32, metaSize: 20, crestSize: 80 };
+  if (count <= 6) return { cols: 2, aspect: '1 / 0.85', nameSize: 28, metaSize: 18, crestSize: 68 };
+  if (count <= 9) return { cols: 3, aspect: '1 / 1.1', nameSize: 24, metaSize: 16, crestSize: 58 };
+  return { cols: 4, aspect: '1 / 1', nameSize: 20, metaSize: 14, crestSize: 50 };
 }
 
 function buildCardHtml(player, match, layout) {
@@ -161,16 +161,15 @@ function buildHtml(data) {
   }
 
   .card {
-    background: #131313;
-    border: 1px solid rgba(255,255,255,0.08);
-    overflow: hidden;
-    border-radius: 4px;
+    background: transparent;
   }
 
   .card-photo-wrap {
     position: relative;
     width: 100%;
     background: #1c1c1c;
+    border: 1px solid rgba(255,255,255,0.15);
+    overflow: hidden;
   }
 
   .card-photo {
@@ -196,15 +195,16 @@ function buildHtml(data) {
   .card-fade {
     position: absolute;
     inset: 0;
-    background: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.15) 45%, transparent 65%);
+    background: linear-gradient(to top, #000000 0%, rgba(0,0,0,0.85) 22%, rgba(0,0,0,0.4) 45%, transparent 70%);
   }
 
   .crests {
     position: absolute;
-    left: 12px;
-    bottom: 12px;
+    left: 50%;
+    bottom: 14px;
+    transform: translateX(-50%);
     display: flex;
-    gap: 6px;
+    gap: 10px;
     z-index: 2;
   }
 
@@ -212,13 +212,11 @@ function buildHtml(data) {
     width: ${layout.crestSize}px;
     height: ${layout.crestSize}px;
     object-fit: contain;
-    background: rgba(255,255,255,0.95);
-    border-radius: 50%;
-    padding: 5px;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6));
   }
 
   .card-info {
-    padding: 16px 16px 20px;
+    padding: 14px 4px 0;
   }
 
   .card-meta {
@@ -238,15 +236,15 @@ function buildHtml(data) {
   }
 
   .footer {
-    padding: 56px 0 64px;
+    padding: 60px 0 70px;
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
   .footer img {
-    height: 70px;
-    opacity: 0.9;
+    height: 130px;
+    opacity: 1;
   }
 </style>
 </head>
