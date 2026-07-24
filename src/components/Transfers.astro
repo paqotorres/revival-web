@@ -66,7 +66,7 @@ const transfers = transfersData.map((tr) => ({
         class="transfer-preview flex items-center gap-3 rounded-xl border border-white/5 bg-white/[0.03] px-4 py-3 text-left opacity-70 hover:opacity-100 transition-opacity"
         aria-label={t.transfers.prevAria}
       >
-        <img id="tr-prev-photo" src="" alt="" class="h-10 w-10 shrink-0 rounded-full object-cover border border-white/10" />
+        <img id="tr-prev-photo" src="" alt="" class="h-10 w-10 shrink-0 rounded-full object-cover object-top border border-white/10" />
         <p id="tr-prev-name" class="text-bone/80 text-sm truncate flex-1"></p>
         <div class="flex items-center gap-1 shrink-0 opacity-70">
           <img id="tr-prev-from" src="" alt="" class="h-5 w-5 object-contain" />
@@ -80,7 +80,7 @@ const transfers = transfersData.map((tr) => ({
         class="rounded-2xl border border-gold bg-white/[0.04] backdrop-blur-xl shadow-lg shadow-black/20 py-8 px-6 flex flex-col items-center"
         style="box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.3), 0 10px 30px rgba(0, 0, 0, 0.3);"
       >
-        <img id="tr-current-photo" src="" alt="" class="h-20 w-20 rounded-full object-cover border-2 border-gold mb-4" />
+        <img id="tr-current-photo" src="" alt="" class="h-20 w-20 rounded-full object-cover object-top border-2 border-gold mb-4" />
         <p id="tr-current-name" class="font-display text-xl text-bone mb-6"></p>
         <div class="flex items-center gap-4">
           <img id="tr-current-from" src="" alt="" class="h-12 w-12 object-contain" />
@@ -97,7 +97,7 @@ const transfers = transfersData.map((tr) => ({
         class="transfer-preview flex items-center gap-3 rounded-xl border border-white/5 bg-white/[0.03] px-4 py-3 text-left opacity-70 hover:opacity-100 transition-opacity"
         aria-label={t.transfers.nextAria}
       >
-        <img id="tr-next-photo" src="" alt="" class="h-10 w-10 shrink-0 rounded-full object-cover border border-white/10" />
+        <img id="tr-next-photo" src="" alt="" class="h-10 w-10 shrink-0 rounded-full object-cover object-top border border-white/10" />
         <p id="tr-next-name" class="text-bone/80 text-sm truncate flex-1"></p>
         <div class="flex items-center gap-1 shrink-0 opacity-70">
           <img id="tr-next-from" src="" alt="" class="h-5 w-5 object-contain" />
