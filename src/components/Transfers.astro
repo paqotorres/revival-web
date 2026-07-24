@@ -1,0 +1,183 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import { getT, type Lang } from '../i18n/translations';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'es' } = Astro.props;
+const t = getT(lang);
+
+function slugify(name: string) {
+  return name
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+}
+
+function getPlayerPhoto(name: string): string | undefined {
+  const filename = `${slugify(name)}.webp`;
+  const fullPath = path.join(process.cwd(), 'public', 'fichas', filename);
+  return fs.existsSync(fullPath) ? `/fichas/${filename}` : undefined;
+}
+
+function getTeamLogo(teamName: string): string | undefined {
+  const exts = ['webp', 'png', 'svg', 'jpg', 'jpeg'];
+  for (const ext of exts) {
+    const fullPath = path.join(process.cwd(), 'public', 'Equipos', `${teamName}.${ext}`);
+    if (fs.existsSync(fullPath)) return `/Equipos/${teamName}.${ext}`;
+  }
+  return undefined;
+}
+
+const transfersData = [
+  { player: 'Ignacio Mesías', from: 'deportes concepcion', to: 'rangers', fromLabel: 'Deportes Concepción', toLabel: 'Rangers de Talca' },
+  { player: 'Joaquín Montecinos', from: 'limache', to: 'deportes concepcion', fromLabel: 'Deportes Limache', toLabel: 'Deportes Concepción' },
+  { player: 'Ignacio Jeraldino', from: 'union espanola', to: 'nublense', fromLabel: 'Unión Española', toLabel: 'Ñublense' },
+  { player: 'Iván Ledezma', from: 'cobreloa', to: 'copiapo', fromLabel: 'Cobreloa', toLabel: 'Deportes Copiapó' },
+  { player: 'Jorge Espejo', from: 'audax italiano', to: 'u de concepcion', fromLabel: 'Audax Italiano', toLabel: 'Universidad de Concepción' },
+];
+
+const transfers = transfersData.map((tr) => ({
+  player: tr.player,
+  photo: getPlayerPhoto(tr.player),
+  fromLogo: getTeamLogo(tr.from),
+  toLogo: getTeamLogo(tr.to),
+  fromLabel: tr.fromLabel,
+  toLabel: tr.toLabel,
+}));
+---
+
+<section id="transferencias" class="relative z-0 py-28 md:py-36 bg-ink-soft overflow-hidden">
+  <div class="mx-auto max-w-7xl px-6 lg:px-10 text-center">
+    <p data-reveal class="text-gold uppercase tracking-[0.3em] text-xs mb-4">{t.transfers.eyebrow}</p>
+    <h2 data-reveal data-reveal-delay="1" class="font-display uppercase text-4xl md:text-5xl leading-tight text-bone mb-16">
+      {t.transfers.headingPre} <span class="text-gradient-gold">{t.transfers.headingHighlight}</span>
+    </h2>
+
+    <div data-reveal data-reveal-delay="2" class="max-w-md mx-auto flex flex-col gap-2.5">
+      <button
+        id="transfer-prev"
+        type="button"
+        class="transfer-preview flex items-center gap-3 rounded-xl border border-white/5 bg-white/[0.03] px-4 py-3 text-left opacity-70 hover:opacity-100 transition-opacity"
+        aria-label={t.transfers.prevAria}
+      >
+        <img id="tr-prev-photo" src="" alt="" class="h-10 w-10 shrink-0 rounded-full object-cover border border-white/10" />
+        <p id="tr-prev-name" class="text-bone/80 text-sm truncate flex-1"></p>
+        <div class="flex items-center gap-1 shrink-0 opacity-70">
+          <img id="tr-prev-from" src="" alt="" class="h-5 w-5 object-contain" />
+          <span class="text-bone/40 text-xs">→</span>
+          <img id="tr-prev-to" src="" alt="" class="h-5 w-5 object-contain" />
+        </div>
+      </button>
+
+      <div
+        id="transfer-current"
+        class="rounded-2xl border border-gold bg-white/[0.04] backdrop-blur-xl shadow-lg shadow-black/20 py-8 px-6 flex flex-col items-center"
+        style="box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.3), 0 10px 30px rgba(0, 0, 0, 0.3);"
+      >
+        <img id="tr-current-photo" src="" alt="" class="h-20 w-20 rounded-full object-cover border-2 border-gold mb-4" />
+        <p id="tr-current-name" class="font-display text-xl text-bone mb-6"></p>
+        <div class="flex items-center gap-4">
+          <img id="tr-current-from" src="" alt="" class="h-12 w-12 object-contain" />
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-9 text-gold" fill="none" viewBox="0 0 36 20" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 10h14M11 4l6 6-6 6M19 10h14M21 4l6 6-6 6" />
+          </svg>
+          <img id="tr-current-to" src="" alt="" class="h-12 w-12 object-contain" />
+        </div>
+      </div>
+
+      <button
+        id="transfer-next"
+        type="button"
+        class="transfer-preview flex items-center gap-3 rounded-xl border border-white/5 bg-white/[0.03] px-4 py-3 text-left opacity-70 hover:opacity-100 transition-opacity"
+        aria-label={t.transfers.nextAria}
+      >
+        <img id="tr-next-photo" src="" alt="" class="h-10 w-10 shrink-0 rounded-full object-cover border border-white/10" />
+        <p id="tr-next-name" class="text-bone/80 text-sm truncate flex-1"></p>
+        <div class="flex items-center gap-1 shrink-0 opacity-70">
+          <img id="tr-next-from" src="" alt="" class="h-5 w-5 object-contain" />
+          <span class="text-bone/40 text-xs">→</span>
+          <img id="tr-next-to" src="" alt="" class="h-5 w-5 object-contain" />
+        </div>
+      </button>
+    </div>
+  </div>
+</section>
+
+<script define:vars={{ transfers }}>
+  const prevBtn = document.getElementById('transfer-prev');
+  const nextBtn = document.getElementById('transfer-next');
+
+  const curPhoto = document.getElementById('tr-current-photo');
+  const curName = document.getElementById('tr-current-name');
+  const curFrom = document.getElementById('tr-current-from');
+  const curTo = document.getElementById('tr-current-to');
+
+  const prevPhoto = document.getElementById('tr-prev-photo');
+  const prevName = document.getElementById('tr-prev-name');
+  const prevFrom = document.getElementById('tr-prev-from');
+  const prevTo = document.getElementById('tr-prev-to');
+
+  const nextPhoto = document.getElementById('tr-next-photo');
+  const nextName = document.getElementById('tr-next-name');
+  const nextFrom = document.getElementById('tr-next-from');
+  const nextTo = document.getElementById('tr-next-to');
+
+  let current = 0;
+  let timer;
+
+  function update(index) {
+    const n = transfers.length;
+    const prevIdx = (index - 1 + n) % n;
+    const nextIdx = (index + 1) % n;
+    const cur = transfers[index];
+    const prev = transfers[prevIdx];
+    const next = transfers[nextIdx];
+
+    if (curPhoto) { curPhoto.src = cur.photo || ''; curPhoto.alt = cur.player; }
+    if (curName) curName.textContent = cur.player;
+    if (curFrom) { curFrom.src = cur.fromLogo || ''; curFrom.alt = cur.fromLabel; }
+    if (curTo) { curTo.src = cur.toLogo || ''; curTo.alt = cur.toLabel; }
+
+    if (prevPhoto) { prevPhoto.src = prev.photo || ''; prevPhoto.alt = prev.player; }
+    if (prevName) prevName.textContent = prev.player;
+    if (prevFrom) { prevFrom.src = prev.fromLogo || ''; prevFrom.alt = prev.fromLabel; }
+    if (prevTo) { prevTo.src = prev.toLogo || ''; prevTo.alt = prev.toLabel; }
+    prevBtn?.setAttribute('data-index', String(prevIdx));
+
+    if (nextPhoto) { nextPhoto.src = next.photo || ''; nextPhoto.alt = next.player; }
+    if (nextName) nextName.textContent = next.player;
+    if (nextFrom) { nextFrom.src = next.fromLogo || ''; nextFrom.alt = next.fromLabel; }
+    if (nextTo) { nextTo.src = next.toLogo || ''; nextTo.alt = next.toLabel; }
+    nextBtn?.setAttribute('data-index', String(nextIdx));
+  }
+
+  function goTo(index) {
+    const n = transfers.length;
+    current = ((index % n) + n) % n;
+    update(current);
+  }
+
+  function restartAutoplay() {
+    clearInterval(timer);
+    timer = setInterval(() => goTo(current + 1), 3500);
+  }
+
+  prevBtn?.addEventListener('click', () => {
+    goTo(Number(prevBtn.dataset.index));
+    restartAutoplay();
+  });
+
+  nextBtn?.addEventListener('click', () => {
+    goTo(Number(nextBtn.dataset.index));
+    restartAutoplay();
+  });
+
+  update(0);
+  if (transfers.length > 1) restartAutoplay();
+</script>

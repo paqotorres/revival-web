@@ -111,6 +111,13 @@ export const translations = {
       eyebrow: 'Instagram',
       headingPre: 'Síguenos',
     },
+    transfers: {
+      eyebrow: 'Actividad Reciente',
+      headingPre: 'Últimas',
+      headingHighlight: 'Transferencias',
+      prevAria: 'Transferencia anterior',
+      nextAria: 'Siguiente transferencia',
+    },
     alliances: {
       eyebrow: 'Alianzas',
       text: 'Contamos con alianzas importantes en el mundo de las transferencias deportivas, brindando un seguimiento oportuno a los jugadores en los mercados del fútbol.',
@@ -237,6 +244,13 @@ export const translations = {
     instagram: {
       eyebrow: 'Instagram',
       headingPre: 'Follow us',
+    },
+    transfers: {
+      eyebrow: 'Recent Activity',
+      headingPre: 'Latest',
+      headingHighlight: 'Transfers',
+      prevAria: 'Previous transfer',
+      nextAria: 'Next transfer',
     },
     alliances: {
       eyebrow: 'Partnerships',
