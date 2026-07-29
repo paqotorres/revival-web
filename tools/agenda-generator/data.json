@@ -1,20 +1,33 @@
 {
-  "date": "VIERNES 24 JULIO",
-  "tag": "PROYECCIÓN",
+  "date": "DOMINGO 26 JULIO",
   "matches": [
     {
       "competition": "Sub 20",
-      "time": "08:30HRS CHILE",
-      "teamA": "union española",
-      "teamB": "cobreloa",
-      "players": ["Alberto Tejerina", "Lucas Cornejo"]
+      "time": "11:00HRS CHILE",
+      "teamA": "everton",
+      "teamB": "u de chile",
+      "players": ["José Alburquenque"]
     },
     {
-      "competition": "Sub 20",
-      "time": "13:00HRS CHILE",
-      "teamA": "huachipato",
-      "teamB": "deportes temuco",
-      "players": ["Franco Gutiérrez", "Juan Garrido"]
+      "competition": "Liga de Ascenso",
+      "time": "12:30HRS CHILE",
+      "teamA": "rangers",
+      "teamB": "copiapo",
+      "players": ["Sebastián Acuña", "Ignacio Mesías", "Iván Ledezma"]
+    },
+    {
+      "competition": "Liga de Ascenso",
+      "time": "17:30HRS CHILE",
+      "teamA": "san marcos de arica",
+      "teamB": "magallanes",
+      "players": ["Matías Osorio"]
+    },
+    {
+      "competition": "Primera División",
+      "time": "20:30HRS CHILE",
+      "teamA": "deportes concepcion",
+      "teamB": "ohiggins",
+      "players": [{ "name": "Joaquín Montecinos", "focusY": 30 }, "Ariel Cáceres"]
     }
   ]
 }

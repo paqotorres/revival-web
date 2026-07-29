@@ -17,7 +17,18 @@ function slugify(name) {
     .replace(/(^-|-$)/g, '');
 }
 
+// Per-player photo overrides used specifically for agenda graphics
+// (e.g. a closer face shot supplied separately from the website ficha).
+const AGENDA_PHOTO_OVERRIDES = {
+  'Joaquín Montecinos': 'montecinos agenda.jpeg',
+};
+
 function findPlayerPhoto(name) {
+  const override = AGENDA_PHOTO_OVERRIDES[name];
+  if (override) {
+    const overrideFile = path.join(FICHAS_DIR, override);
+    if (fs.existsSync(overrideFile)) return overrideFile;
+  }
   const file = path.join(FICHAS_DIR, `${slugify(name)}.webp`);
   return fs.existsSync(file) ? file : null;
 }
@@ -47,18 +58,21 @@ function initials(name) {
 function pickLayout(count) {
   if (count <= 2) return { cols: 1, aspect: '4 / 3', nameSize: 40, metaSize: 24, crestSize: 92 };
   if (count <= 4) return { cols: 2, aspect: '1 / 1.15', nameSize: 32, metaSize: 20, crestSize: 80 };
-  if (count <= 6) return { cols: 2, aspect: '1 / 0.85', nameSize: 28, metaSize: 18, crestSize: 68 };
+  if (count <= 8) return { cols: 2, aspect: '1 / 0.65', nameSize: 28, metaSize: 25, crestSize: 100 };
   if (count <= 9) return { cols: 3, aspect: '1 / 1.1', nameSize: 24, metaSize: 16, crestSize: 58 };
   return { cols: 4, aspect: '1 / 1', nameSize: 20, metaSize: 14, crestSize: 50 };
 }
 
-function buildCardHtml(player, match, layout) {
+function buildCardHtml(playerEntry, match, layout) {
+  const player = typeof playerEntry === 'string' ? playerEntry : playerEntry.name;
+  const focusY = typeof playerEntry === 'string' ? 0 : (playerEntry.focusY ?? 0);
   const photo = findPlayerPhoto(player);
   const logoA = findTeamLogo(match.teamA);
   const logoB = findTeamLogo(match.teamB);
 
+  const photoStyle = focusY !== 0 ? ` style="object-position: center ${focusY}%;"` : '';
   const photoHtml = photo
-    ? `<img class="card-photo" src="${toDataUri(photo)}" />`
+    ? `<img class="card-photo" src="${toDataUri(photo)}"${photoStyle} />`
     : `<div class="card-photo card-photo-fallback"><span>${initials(player)}</span></div>`;
 
   const crestsHtml = `
@@ -250,7 +264,6 @@ function buildHtml(data) {
 </head>
 <body>
   <div class="header">
-    <p class="tag">${data.tag}</p>
     <div class="title"><span>AGENDA</span></div>
     <p class="date">${data.date}</p>
   </div>
