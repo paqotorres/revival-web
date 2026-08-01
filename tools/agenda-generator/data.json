@@ -1,33 +1,40 @@
 {
-  "date": "DOMINGO 26 JULIO",
+  "date": "SÁBADO 1 AGOSTO",
   "matches": [
     {
-      "competition": "Sub 20",
-      "time": "11:00HRS CHILE",
-      "teamA": "everton",
-      "teamB": "u de chile",
-      "players": ["José Alburquenque"]
+      "competition": "Proyección",
+      "time": "9:30HRS CHILE",
+      "teamA": "deportes temuco",
+      "teamB": "palestino",
+      "players": ["Juan Garrido"]
     },
     {
-      "competition": "Liga de Ascenso",
+      "competition": "Proyección",
+      "time": "10:00HRS CHILE",
+      "teamA": "iquique",
+      "teamB": "u de chile",
+      "players": ["Damir Ponce", "Diego de la Jara", "José Alburquenque"]
+    },
+    {
+      "competition": "Proyección",
+      "time": "12:15HRS CHILE",
+      "teamA": "iquique",
+      "teamB": "u de chile",
+      "players": ["Fabiano Saavedra"]
+    },
+    {
+      "competition": "Primera División",
       "time": "12:30HRS CHILE",
-      "teamA": "rangers",
-      "teamB": "copiapo",
-      "players": ["Sebastián Acuña", "Ignacio Mesías", "Iván Ledezma"]
+      "teamA": "cobresal",
+      "teamB": "union la calera",
+      "players": ["Aaron Astudillo", "Michael Maturana"]
     },
     {
       "competition": "Liga de Ascenso",
       "time": "17:30HRS CHILE",
-      "teamA": "san marcos de arica",
-      "teamB": "magallanes",
-      "players": ["Matías Osorio"]
-    },
-    {
-      "competition": "Primera División",
-      "time": "20:30HRS CHILE",
-      "teamA": "deportes concepcion",
-      "teamB": "ohiggins",
-      "players": [{ "name": "Joaquín Montecinos", "focusY": 30 }, "Ariel Cáceres"]
+      "teamA": "curico unido",
+      "teamB": "cobreloa",
+      "players": ["Joaquín Alfaro", "Lucas Cornejo"]
     }
   ]
 }
