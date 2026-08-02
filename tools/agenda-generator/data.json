@@ -1,40 +1,40 @@
 {
-  "date": "SÁBADO 1 AGOSTO",
+  "date": "DOMINGO 2 AGOSTO",
   "matches": [
-    {
-      "competition": "Proyección",
-      "time": "9:30HRS CHILE",
-      "teamA": "deportes temuco",
-      "teamB": "palestino",
-      "players": ["Juan Garrido"]
-    },
-    {
-      "competition": "Proyección",
-      "time": "10:00HRS CHILE",
-      "teamA": "iquique",
-      "teamB": "u de chile",
-      "players": ["Damir Ponce", "Diego de la Jara", "José Alburquenque"]
-    },
-    {
-      "competition": "Proyección",
-      "time": "12:15HRS CHILE",
-      "teamA": "iquique",
-      "teamB": "u de chile",
-      "players": ["Fabiano Saavedra"]
-    },
     {
       "competition": "Primera División",
       "time": "12:30HRS CHILE",
-      "teamA": "cobresal",
-      "teamB": "union la calera",
-      "players": ["Aaron Astudillo", "Michael Maturana"]
+      "teamA": "deportes concepcion",
+      "teamB": "universidad catolica",
+      "players": ["Ariel Cáceres", "Diego Carrasco", { "name": "Joaquín Montecinos", "focusY": 30 }, "Bernardo Cerezo", "Alfred Canales"]
+    },
+    {
+      "competition": "Liga de Ascenso",
+      "time": "12:30HRS CHILE",
+      "teamA": "magallanes",
+      "teamB": "union espanola",
+      "players": ["Matías Osorio"]
+    },
+    {
+      "competition": "Primera División",
+      "time": "15:00HRS CHILE",
+      "teamA": "la serena",
+      "teamB": "ohiggins",
+      "players": ["Seba Díaz"]
+    },
+    {
+      "competition": "Liga de Ascenso",
+      "time": "15:00HRS CHILE",
+      "teamA": "recoleta",
+      "teamB": "puerto montt",
+      "players": [{ "name": "Gonzalo Álvarez", "focusY": 15 }]
     },
     {
       "competition": "Liga de Ascenso",
       "time": "17:30HRS CHILE",
-      "teamA": "curico unido",
-      "teamB": "cobreloa",
-      "players": ["Joaquín Alfaro", "Lucas Cornejo"]
+      "teamA": "santa cruz",
+      "teamB": "santiago wanderers",
+      "players": ["Vicente Vargas"]
     }
   ]
 }

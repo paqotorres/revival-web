@@ -59,7 +59,7 @@ function initials(name) {
 function pickLayout(count) {
   if (count <= 2) return { cols: 1, aspect: '4 / 3', nameSize: 40, metaSize: 24, crestSize: 92 };
   if (count <= 4) return { cols: 2, aspect: '1 / 1.15', nameSize: 32, metaSize: 20, crestSize: 80 };
-  if (count <= 10) return { cols: 2, aspect: '1 / 0.65', nameSize: 28, metaSize: 25, crestSize: 100 };
+  if (count <= 10) return { cols: 2, aspect: '1 / 0.65', nameSize: 28, metaSize: 25, crestSize: 72 };
   if (count <= 12) return { cols: 3, aspect: '1 / 1.1', nameSize: 24, metaSize: 16, crestSize: 58 };
   return { cols: 4, aspect: '1 / 1', nameSize: 20, metaSize: 14, crestSize: 50 };
 }
