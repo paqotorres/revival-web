@@ -96,7 +96,250 @@ function buildCardHtml(playerEntry, match, layout) {
     </div>`;
 }
 
+// Alternating accent colors for the horizontal "rows" layout, one per match row.
+const ROW_COLORS = ['#159957', '#c0392b', '#7c3aed', '#0f766e', '#d97706', '#1864ab', '#be185d'];
+
+function formatRowTime(time) {
+  // "9:30HRS CHILE" -> "9H30", "20:00HRS CHILE" -> "20H"
+  const m = time.match(/(\d{1,2}):(\d{2})/);
+  if (!m) return time;
+  const [, h, min] = m;
+  return min === '00' ? `${h}H` : `${h}H${min}`;
+}
+
+function buildPlayerColumnHtml(playerEntry) {
+  const player = typeof playerEntry === 'string' ? playerEntry : playerEntry.name;
+  const focusY = typeof playerEntry === 'string' ? 0 : (playerEntry.focusY ?? 0);
+  const photo = findPlayerPhoto(player);
+  const photoStyle = focusY !== 0 ? ` style="object-position: center ${focusY}%;"` : '';
+  const photoHtml = photo
+    ? `<img class="col-photo" src="${toDataUri(photo)}"${photoStyle} />`
+    : `<div class="col-photo col-photo-fallback"><span>${initials(player)}</span></div>`;
+
+  return `
+    <div class="player-col">
+      ${photoHtml}
+      <div class="col-fade"></div>
+      <p class="col-name">${player}</p>
+    </div>`;
+}
+
+function buildRowHtml(match, index) {
+  const color = ROW_COLORS[index % ROW_COLORS.length];
+  const logoA = findTeamLogo(match.teamA);
+  const logoB = findTeamLogo(match.teamB);
+  const columns = match.players.map(buildPlayerColumnHtml).join('\n');
+
+  return `
+    <div class="row">
+      <div class="row-left" style="background:${color};">
+        <p class="row-competition">${match.competition.toUpperCase()}</p>
+        <div class="row-crests">
+          ${logoA ? `<img class="row-crest" src="${toDataUri(logoA)}" />` : ''}
+          ${logoB ? `<img class="row-crest" src="${toDataUri(logoB)}" />` : ''}
+        </div>
+        <p class="row-time">${match.date || ''} ${formatRowTime(match.time)}</p>
+      </div>
+      <div class="row-right">
+        ${columns}
+      </div>
+    </div>`;
+}
+
+function buildRowsHtml(data) {
+  const logoFull = toDataUri(path.join(PUBLIC_DIR, 'logo-full.webp'));
+  const rows = data.matches.map(buildRowHtml).join('\n');
+
+  return `<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body { width: 1080px; }
+
+  body {
+    background: #0a0a0a;
+    font-family: 'Inter', sans-serif;
+    color: #f5f3ef;
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 40px 48px;
+  }
+
+  .header img {
+    height: 88px;
+  }
+
+  .header-title {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 44px;
+    letter-spacing: 0.01em;
+    color: #ffffff;
+  }
+
+  .header-title span {
+    color: #4ade80;
+  }
+
+  .rows {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .row {
+    display: flex;
+    width: 100%;
+    height: 280px;
+  }
+
+  .row-left {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 16px;
+    text-align: center;
+  }
+
+  .row-competition {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-size: 34px;
+    color: #ffffff;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.35);
+  }
+
+  .row-crests {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .row-crest {
+    height: 78px;
+    width: 78px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.5));
+  }
+
+  .row-time {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-size: 26px;
+    color: #ffffff;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.35);
+  }
+
+  .row-right {
+    width: 50%;
+    display: flex;
+    background: #111;
+  }
+
+  .player-col {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    border-left: 1px solid rgba(255,255,255,0.15);
+  }
+
+  .row-right .player-col:first-child {
+    border-left: none;
+  }
+
+  .col-photo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+  }
+
+  .col-photo-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1c1c1c;
+  }
+
+  .col-photo-fallback span {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 40px;
+    color: rgba(255,255,255,0.14);
+  }
+
+  .col-fade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, #000000 0%, rgba(0,0,0,0.75) 30%, transparent 62%);
+  }
+
+  .col-name {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 12px;
+    text-align: center;
+    padding: 0 6px;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 19px;
+    line-height: 1.15;
+    color: #ffffff;
+  }
+
+  .footer {
+    padding: 60px 0 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .footer img {
+    height: 130px;
+  }
+</style>
+</head>
+<body>
+  <div class="header">
+    <img src="${logoFull}" />
+    <p class="header-title">AGENDA <span>${data.date}</span></p>
+  </div>
+
+  <div class="rows">
+    ${rows}
+  </div>
+
+  <div class="footer">
+    <img src="${logoFull}" />
+  </div>
+</body>
+</html>`;
+}
+
 function buildHtml(data) {
+  if (data.layout === 'rows') return buildRowsHtml(data);
+
   const logoFull = toDataUri(path.join(PUBLIC_DIR, 'logo-full.webp'));
 
   const flatCards = data.matches.flatMap((match) => match.players.map((player) => ({ player, match })));
