@@ -337,7 +337,254 @@ function buildRowsHtml(data) {
 </html>`;
 }
 
+// Caption size shrinks as more players share a row, so names stay legible
+// whether it's a lone wide photo or four narrow ones side by side.
+function sidebarNameSize(count) {
+  if (count <= 1) return 27;
+  if (count === 2) return 23;
+  if (count === 3) return 19;
+  return 16;
+}
+
+function buildSidebarColumnHtml(playerEntry, nameSize) {
+  const player = typeof playerEntry === 'string' ? playerEntry : playerEntry.name;
+  const focusY = typeof playerEntry === 'string' ? 0 : (playerEntry.focusY ?? 0);
+  const photo = findPlayerPhoto(player);
+  const photoStyle = focusY !== 0 ? ` style="object-position: center ${focusY}%;"` : '';
+  const photoHtml = photo
+    ? `<img class="sb-photo" src="${toDataUri(photo)}"${photoStyle} />`
+    : `<div class="sb-photo sb-photo-fallback"><span>${initials(player)}</span></div>`;
+
+  return `
+    <div class="sb-col">
+      <div class="sb-photo-wrap">${photoHtml}</div>
+      <p class="sb-name" style="font-size:${nameSize}px;">${player}</p>
+    </div>`;
+}
+
+function buildSidebarRowHtml(match) {
+  const logoA = findTeamLogo(match.teamA);
+  const logoB = findTeamLogo(match.teamB);
+  const nameSize = sidebarNameSize(match.players.length);
+  const columns = match.players.map((p) => buildSidebarColumnHtml(p, nameSize)).join('\n');
+
+  return `
+    <div class="sb-row">
+      <div class="sb-left">
+        <p class="sb-competition">${match.competition.toUpperCase()}</p>
+        <div class="sb-crests">
+          ${logoA ? `<img class="sb-crest" src="${toDataUri(logoA)}" />` : ''}
+          ${logoB ? `<img class="sb-crest" src="${toDataUri(logoB)}" />` : ''}
+        </div>
+        <p class="sb-time">${match.time}<span>H</span></p>
+        <p class="sb-country">CHILE</p>
+      </div>
+      <div class="sb-right">
+        ${columns}
+      </div>
+    </div>`;
+}
+
+function buildSidebarHtml(data) {
+  const logoFull = toDataUri(path.join(PUBLIC_DIR, 'logo-full.webp'));
+  const rows = data.matches.map(buildSidebarRowHtml).join('\n');
+
+  return `<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body { width: 1080px; }
+
+  body {
+    background: #000000;
+    font-family: 'Inter', sans-serif;
+    color: #f5f3ef;
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 40px 48px;
+  }
+
+  .header img {
+    height: 88px;
+  }
+
+  .header-title {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 44px;
+    letter-spacing: 0.01em;
+    color: #ffffff;
+  }
+
+  .header-title span {
+    color: #4ade80;
+  }
+
+  .sb-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    padding: 4px 0 0;
+  }
+
+  .sb-row {
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .sb-left {
+    width: 33.333%;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 16px 12px;
+    text-align: center;
+    background: linear-gradient(to right, #2b2b2b, #050505);
+  }
+
+  .sb-competition {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    font-size: 30px;
+    line-height: 1.1;
+    color: #ffffff;
+  }
+
+  .sb-crests {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .sb-crest {
+    height: 68px;
+    width: 68px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.5));
+  }
+
+  .sb-time {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 32px;
+    color: #ffffff;
+    line-height: 1;
+  }
+
+  .sb-time span {
+    font-size: 22px;
+  }
+
+  .sb-country {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 15px;
+    color: rgba(255,255,255,0.55);
+    margin-top: -6px;
+  }
+
+  .sb-right {
+    width: 66.667%;
+    display: flex;
+  }
+
+  .sb-col {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sb-photo-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 0.6;
+    overflow: hidden;
+    background: #1c1c1c;
+  }
+
+  .sb-photo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+  }
+
+  .sb-photo-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .sb-photo-fallback span {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 40px;
+    color: rgba(255,255,255,0.14);
+  }
+
+  .sb-name {
+    padding: 10px 6px 0;
+    text-align: center;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    line-height: 1.15;
+    color: #ffffff;
+  }
+
+  .footer {
+    padding: 60px 0 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .footer img {
+    height: 130px;
+  }
+</style>
+</head>
+<body>
+  <div class="header">
+    <img src="${logoFull}" />
+    <p class="header-title">AGENDA <span>${data.date}</span></p>
+  </div>
+
+  <div class="sb-rows">
+    ${rows}
+  </div>
+
+  <div class="footer">
+    <img src="${logoFull}" />
+  </div>
+</body>
+</html>`;
+}
+
 function buildHtml(data) {
+  if (data.layout === 'sidebar') return buildSidebarHtml(data);
   if (data.layout === 'rows') return buildRowsHtml(data);
 
   const logoFull = toDataUri(path.join(PUBLIC_DIR, 'logo-full.webp'));

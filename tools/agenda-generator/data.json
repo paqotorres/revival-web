@@ -1,46 +1,41 @@
 {
-  "date": "DOMINGO 23 AGOSTO",
-  "layout": "rows",
+  "date": "VIERNES 4 SEPTIEMBRE",
+  "layout": "sidebar",
   "matches": [
     {
       "competition": "Sub 20",
-      "time": "10:00HRS CHILE",
-      "date": "23 AGO -",
-      "teamA": "ohiggins",
-      "teamB": "u de chile",
-      "players": ["José Alburquenque", "Diego de la Jara"]
+      "time": "09:00",
+      "teamA": "cobreloa",
+      "teamB": "santiago city",
+      "players": ["Matías Sepúlveda"]
     },
     {
-      "competition": "Primera División",
-      "time": "12:00HRS CHILE",
-      "date": "23 AGO -",
-      "teamA": "la serena",
-      "teamB": "cobresal",
-      "players": ["Seba Díaz", "Aaron Astudillo"]
-    },
-    {
-      "competition": "Primera División",
-      "time": "12:00HRS CHILE",
-      "date": "23 AGO -",
-      "teamA": "deportes concepcion",
-      "teamB": "coquimbo unido",
-      "players": [{ "name": "Joaquín Montecinos", "focusY": 30 }, "Ariel Cáceres", "Diego Carrasco", "Nicolás Fuentes"]
-    },
-    {
-      "competition": "Sub 18",
-      "time": "12:15HRS CHILE",
-      "date": "23 AGO -",
-      "teamA": "iquique",
-      "teamB": "recoleta",
-      "players": ["Fabiano Saavedra", { "name": "Damir Ponce", "focusY": 0 }]
+      "competition": "Sub 20",
+      "time": "11:00",
+      "teamA": "curico unido",
+      "teamB": "santa cruz",
+      "players": ["Joaquín Alfaro"]
     },
     {
       "competition": "Ascenso",
-      "time": "19:30HRS CHILE",
-      "date": "23 AGO -",
-      "teamA": "curico unido",
-      "teamB": "union san felipe",
-      "players": ["Joaquín Alfaro"]
+      "time": "18:00",
+      "teamA": "rangers",
+      "teamB": "deportes temuco",
+      "players": ["Ignacio Mesías", "Sebastián Acuña"]
+    },
+    {
+      "competition": "Ascenso",
+      "time": "18:00",
+      "teamA": "santiago wanderers",
+      "teamB": "iquique",
+      "players": ["Vicente Vargas", "Dilan Rojas"]
+    },
+    {
+      "competition": "Primera División",
+      "time": "20:30",
+      "teamA": "deportes concepcion",
+      "teamB": "audax italiano",
+      "players": [{ "name": "Joaquín Montecinos", "focusY": 30 }, "Diego Carrasco", "Nicolás Fuentes"]
     }
   ]
 }
