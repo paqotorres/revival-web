@@ -3,6 +3,7 @@
 // Usage: node generate.cjs [path/to/data.json] [output.pdf]
 const fs = require('fs');
 const path = require('path');
+const { execFileSync } = require('child_process');
 const { chromium } = require('playwright');
 
 const PUBLIC_DIR = path.join(__dirname, '..', '..', 'public');
@@ -251,23 +252,51 @@ async function main() {
   await page.goto('file://' + htmlPath, { waitUntil: 'networkidle' });
   await page.waitForTimeout(200);
 
-  // Repeating footer logo on every page, via Playwright's dedicated
+  // Repeating footer logo on content pages, via Playwright's dedicated
   // header/footer template (rendered outside the normal page content flow).
   const footerTemplate = `
     <div style="width:100%; font-size:0; text-align:center; padding-top:2px;">
       <img src="${logoFull}" style="height:60px; opacity:0.9;" />
     </div>`;
 
+  // The cover (page 1) and the content pages need different margins — the
+  // cover must bleed fully black with no header/footer band, while content
+  // pages need generous top/bottom room. Chromium's pdf() margin/footer
+  // options are global per call, so each is rendered as its own PDF (via
+  // pageRanges) and the two are merged afterwards.
+  const coverPdfPath = path.join(path.dirname(outputPath), '_cover.pdf');
+  const contentPdfPath = path.join(path.dirname(outputPath), '_content.pdf');
+
   await page.pdf({
-    path: outputPath,
+    path: coverPdfPath,
+    format: 'A4',
+    printBackground: true,
+    pageRanges: '1',
+    margin: { top: '0', bottom: '0', left: '0', right: '0' },
+  });
+
+  await page.pdf({
+    path: contentPdfPath,
     format: 'A4',
     printBackground: true,
     displayHeaderFooter: true,
     headerTemplate: '<div></div>',
     footerTemplate,
+    pageRanges: '2-',
     margin: { top: '50px', bottom: '85px', left: '0', right: '0' },
   });
   await browser.close();
+
+  const mergeScript = `
+import fitz
+out = fitz.open()
+out.insert_pdf(fitz.open(${JSON.stringify(coverPdfPath)}))
+out.insert_pdf(fitz.open(${JSON.stringify(contentPdfPath)}))
+out.save(${JSON.stringify(outputPath)})
+`;
+  execFileSync('python3', ['-c', mergeScript]);
+  fs.unlinkSync(coverPdfPath);
+  fs.unlinkSync(contentPdfPath);
 
   console.log('Generated:', outputPath);
 }
