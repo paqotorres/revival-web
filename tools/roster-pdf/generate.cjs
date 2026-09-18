@@ -220,8 +220,8 @@ async function main() {
   // Repeating footer logo on every page, via Playwright's dedicated
   // header/footer template (rendered outside the normal page content flow).
   const footerTemplate = `
-    <div style="width:100%; font-size:0; text-align:center; padding-top:6px;">
-      <img src="${logoFull}" style="height:34px; opacity:0.85;" />
+    <div style="width:100%; font-size:0; text-align:center; padding-top:2px;">
+      <img src="${logoFull}" style="height:60px; opacity:0.9;" />
     </div>`;
 
   await page.pdf({
@@ -231,7 +231,7 @@ async function main() {
     displayHeaderFooter: true,
     headerTemplate: '<div></div>',
     footerTemplate,
-    margin: { top: '30px', bottom: '60px', left: '0', right: '0' },
+    margin: { top: '30px', bottom: '85px', left: '0', right: '0' },
   });
   await browser.close();
 
