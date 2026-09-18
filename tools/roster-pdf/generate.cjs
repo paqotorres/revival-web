@@ -75,7 +75,7 @@ function buildSectionHtml(section, index) {
     </div>`;
 }
 
-function buildHtml(data) {
+function buildHtml(data, logoWhite) {
   const sections = data.sections.map(buildSectionHtml).join('\n');
 
   return `<!doctype html>
@@ -91,11 +91,39 @@ function buildHtml(data) {
     background: #ffffff;
     font-family: 'Inter', sans-serif;
     color: #111111;
-    padding: 8px 46px 0;
+    padding: 0 46px 0;
+  }
+
+  .cover {
+    background: #000000;
+    margin: 0 -46px;
+    width: calc(100% + 92px);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+    page-break-after: always;
+  }
+
+  .cover img {
+    width: 230px;
+  }
+
+  .cover-title {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #ffffff;
+    text-align: center;
+    font-size: 58px;
+    line-height: 1.15;
+    letter-spacing: 0.04em;
   }
 
   .section {
-    padding-top: 26px;
+    padding-top: 38px;
   }
 
   .section-badge-wrap {
@@ -191,6 +219,11 @@ function buildHtml(data) {
 </style>
 </head>
 <body>
+  <div class="cover">
+    <img src="${logoWhite}" />
+    <p class="cover-title">ROSTER<br />JUGADORES<br />2026</p>
+  </div>
+
   ${sections}
 </body>
 </html>`;
@@ -201,8 +234,9 @@ async function main() {
   const outputPath = path.resolve(process.argv[3] || path.join(__dirname, 'output', `plantel-${Date.now()}.pdf`));
 
   const data = JSON.parse(fs.readFileSync(dataPath, 'utf-8'));
-  const html = buildHtml(data);
   const logoFull = toDataUri(path.join(PUBLIC_DIR, 'logo-full.webp'));
+  const logoWhite = toDataUri(path.join(PUBLIC_DIR, 'logo-full-white.webp'));
+  const html = buildHtml(data, logoWhite);
 
   fs.mkdirSync(path.dirname(outputPath), { recursive: true });
   const htmlPath = path.join(path.dirname(outputPath), '_render.html');
@@ -231,7 +265,7 @@ async function main() {
     displayHeaderFooter: true,
     headerTemplate: '<div></div>',
     footerTemplate,
-    margin: { top: '30px', bottom: '85px', left: '0', right: '0' },
+    margin: { top: '0', bottom: '85px', left: '0', right: '0' },
   });
   await browser.close();
 
