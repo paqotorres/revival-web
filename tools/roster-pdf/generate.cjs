@@ -265,7 +265,7 @@ async function main() {
     displayHeaderFooter: true,
     headerTemplate: '<div></div>',
     footerTemplate,
-    margin: { top: '0', bottom: '85px', left: '0', right: '0' },
+    margin: { top: '50px', bottom: '85px', left: '0', right: '0' },
   });
   await browser.close();
 
