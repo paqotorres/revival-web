@@ -1,0 +1,107 @@
+{
+  "title": "Plantel Revival Football",
+  "sections": [
+    {
+      "label": "Juveniles",
+      "groups": [
+        {
+          "position": "Arqueros",
+          "players": [
+            { "name": "José Alburquenque", "club": "U. de Chile" },
+            { "name": "Matías Meza", "club": "Universidad Católica" }
+          ]
+        },
+        {
+          "position": "Defensas",
+          "players": [
+            { "name": "Sebastián Jaramillo", "club": "Santiago Wanderers" },
+            { "name": "Damir Ponce", "club": "Deportes Iquique" }
+          ]
+        },
+        {
+          "position": "Medios / Volantes",
+          "players": [
+            { "name": "Franco Cáceres", "club": "Deportes Concepción" },
+            { "name": "Juan Garrido", "club": "Deportes Temuco" },
+            { "name": "Ítalo Pastén", "club": "Audax Italiano" },
+            { "name": "Joaquín Oñate", "club": "Palestino" },
+            { "name": "Dennis Leyton", "club": "Cobresal" },
+            { "name": "Vicente Olivares", "club": "Universidad Católica" },
+            { "name": "Diego de la Jara", "club": "Universidad de Chile" }
+          ]
+        },
+        {
+          "position": "Delanteros",
+          "players": [
+            { "name": "Esteban Gallardo", "club": "Cobreloa" },
+            { "name": "Claudio Toro", "club": "Deportes Concepción" },
+            { "name": "Franco Gutiérrez", "club": "Deportes Temuco" },
+            { "name": "Alberto Tejerina", "club": "Cobreloa" },
+            { "name": "Fabiano Saavedra", "club": "Deportes Iquique" },
+            { "name": "Martín Espinoza", "club": "O'Higgins" },
+            { "name": "Sergio Carrasco", "club": "Cobresal" },
+            { "name": "Cristopher Fredes", "club": "Cobreloa" }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Primer Equipo",
+      "groups": [
+        {
+          "position": "Defensas",
+          "players": [
+            { "name": "Michael Maturana", "club": "Unión La Calera" },
+            { "name": "Bernardo Cerezo", "club": "Universidad Católica" },
+            { "name": "Ariel Cáceres", "club": "Deportes Concepción" },
+            { "name": "Jorge Espejo", "club": "Universidad de Concepción" },
+            { "name": "Benjamín Sáez", "club": "Universidad de Concepción" },
+            { "name": "Patricio Romero", "club": "Universidad de Concepción" },
+            { "name": "Sebastián Acuña", "club": "Rangers de Talca" },
+            { "name": "Francisco Herrera", "club": "Universidad de Concepción" },
+            { "name": "Diego Carrasco", "club": "Deportes Concepción" },
+            { "name": "Diego Monreal", "club": "Audax Italiano" },
+            { "name": "Rodrigo Sandoval", "club": "Cobresal" },
+            { "name": "Taizo Bahamondez", "club": "Santiago Wanderers" },
+            { "name": "Cristóbal Muñoz", "club": "Audax Italiano" },
+            { "name": "Dilan Rojas", "club": "Deportes Iquique" },
+            { "name": "Aaron Astudillo", "club": "Cobresal" },
+            { "name": "Byron Navarro", "club": "Concón National" },
+            { "name": "Moisés González", "club": "Universidad de Concepción" }
+          ]
+        },
+        {
+          "position": "Medios / Volantes",
+          "players": [
+            { "name": "Lucas Cornejo", "club": "Cobreloa" },
+            { "name": "Iván Ledezma", "club": "Deportes Copiapó" },
+            { "name": "Alfred Canales", "club": "Universidad Católica" },
+            { "name": "Seba Díaz", "club": "Deportes La Serena" },
+            { "name": "Nicolás Fuentes", "club": "Deportes Concepción" },
+            { "name": "Matías Osorio", "club": "Magallanes" },
+            { "name": "Benjamín Droguett", "club": "Unión Española" },
+            { "name": "Fabián Abarca", "club": "Trasandino" },
+            { "name": "Jordan Mella", "club": "Trasandino" },
+            { "name": "Joaquín Alfaro", "club": "Curicó Unido" },
+            { "name": "Diego Valdés", "club": "Vélez Sarsfield" }
+          ]
+        },
+        {
+          "position": "Delanteros",
+          "players": [
+            { "name": "Vicente Vargas", "club": "Santiago Wanderers" },
+            { "name": "Joaquín Montecinos", "club": "Deportes Concepción" },
+            { "name": "Ignacio Jeraldino", "club": "Ñublense" },
+            { "name": "Ignacio Mesías", "club": "Rangers de Talca" },
+            { "name": "Francisco Espoz", "club": "Deportes Copiapó" },
+            { "name": "Matías Sepúlveda", "club": "Cobresal" },
+            { "name": "Gonzalo Álvarez", "club": "Deportes Recoleta" },
+            { "name": "Vicente Vera", "club": "Santiago Wanderers" },
+            { "name": "Joel Ahumada", "club": "Santiago City" },
+            { "name": "Matías Belmar", "club": "Colchagua" }
+          ]
+        }
+      ]
+    }
+  ]
+}
