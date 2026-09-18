@@ -42,22 +42,27 @@ function buildPlayerCardHtml(player) {
   return `
     <div class="p-card">
       ${photoHtml}
-      <p class="p-name">${player.name}</p>
-      <p class="p-club">${player.club}</p>
+      <div class="p-text">
+        <p class="p-name">${player.name}</p>
+        <p class="p-club">${player.club}</p>
+      </div>
     </div>`;
 }
 
+// CSS grid rows don't fragment cleanly across PDF pages in Chromium's print
+// pipeline (a tall grid tends to jump as one block), so pairs are built as
+// explicit stacked flex rows instead, each free to break independently.
 function buildGroupHtml(group) {
-  const cards = group.players.map(buildPlayerCardHtml).join('\n');
+  const rows = [];
+  for (let i = 0; i < group.players.length; i += 2) {
+    const pair = group.players.slice(i, i + 2).map(buildPlayerCardHtml).join('\n');
+    rows.push(`<div class="group-row">${pair}</div>`);
+  }
+
   return `
     <div class="group">
-      <div class="group-header">
-        <span class="group-bar"></span>
-        <h3 class="group-title">${group.position}</h3>
-      </div>
-      <div class="group-grid">
-        ${cards}
-      </div>
+      <h3 class="group-title">${group.position}</h3>
+      ${rows.join('\n')}
     </div>`;
 }
 
@@ -65,13 +70,12 @@ function buildSectionHtml(section, index) {
   const groups = section.groups.map(buildGroupHtml).join('\n');
   return `
     <div class="section" ${index > 0 ? 'style="page-break-before: always;"' : ''}>
-      <h2 class="section-title">${section.label}</h2>
+      <div class="section-badge-wrap"><span class="section-badge">${section.label}</span></div>
       ${groups}
     </div>`;
 }
 
 function buildHtml(data) {
-  const logoFull = toDataUri(path.join(PUBLIC_DIR, 'logo-full.webp'));
   const sections = data.sections.map(buildSectionHtml).join('\n');
 
   return `<!doctype html>
@@ -84,98 +88,72 @@ function buildHtml(data) {
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    background: #0a0a0a;
+    background: #ffffff;
     font-family: 'Inter', sans-serif;
-    color: #f5f3ef;
-    padding: 40px 48px 10px;
-  }
-
-  .header {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    margin-bottom: 30px;
-  }
-
-  .header img {
-    height: 64px;
-  }
-
-  .header-title {
-    font-family: 'Oswald', sans-serif;
-    font-weight: 800;
-    text-transform: uppercase;
-    font-size: 30px;
-    color: #ffffff;
-    line-height: 1.05;
-  }
-
-  .header-title span {
-    color: #4ade80;
+    color: #111111;
+    padding: 8px 46px 0;
   }
 
   .section {
-    padding-top: 10px;
+    padding-top: 26px;
   }
 
-  .section-title {
+  .section-badge-wrap {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .section-badge {
+    display: inline-block;
+    background: #111111;
+    color: #ffffff;
+    padding: 11px 38px;
+    border-radius: 999px;
     font-family: 'Oswald', sans-serif;
-    font-weight: 800;
+    font-weight: 700;
     text-transform: uppercase;
-    font-size: 30px;
-    letter-spacing: 0.06em;
-    color: #4ade80;
-    border-bottom: 2px solid #22c55e;
-    padding-bottom: 10px;
-    margin-bottom: 22px;
+    letter-spacing: 0.12em;
+    font-size: 17px;
   }
 
   .group {
-    margin-bottom: 26px;
-    break-inside: avoid;
-  }
-
-  .group-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 14px;
-  }
-
-  .group-bar {
-    width: 5px;
-    height: 18px;
-    background: #22c55e;
-    display: inline-block;
+    margin-bottom: 40px;
   }
 
   .group-title {
     font-family: 'Oswald', sans-serif;
-    font-weight: 700;
+    font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    font-size: 17px;
-    color: #ffffff;
+    letter-spacing: 0.03em;
+    font-size: 32px;
+    color: #111111;
+    text-align: center;
+    margin-bottom: 26px;
+    break-after: avoid;
   }
 
-  .group-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 16px 14px;
-  }
-
-  .p-card {
+  .group-row {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 30px;
     break-inside: avoid;
   }
 
+  .p-card {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    width: calc(50% - 20px);
+  }
+
   .p-photo {
-    width: 100%;
-    aspect-ratio: 1 / 1;
+    width: 150px;
+    height: 112px;
+    flex-shrink: 0;
     object-fit: cover;
     object-position: top center;
-    border-radius: 6px;
-    border: 1.5px solid rgba(34,197,94,0.5);
-    background: #1c1c1c;
+    border-radius: 4px;
+    background: #eeeeee;
     display: block;
   }
 
@@ -188,36 +166,31 @@ function buildHtml(data) {
   .p-photo-fallback span {
     font-family: 'Oswald', sans-serif;
     font-weight: 700;
-    font-size: 26px;
-    color: rgba(255,255,255,0.18);
+    font-size: 28px;
+    color: rgba(0,0,0,0.2);
   }
 
   .p-name {
-    margin-top: 7px;
     font-family: 'Oswald', sans-serif;
     font-weight: 700;
     text-transform: uppercase;
-    font-size: 10.5px;
-    line-height: 1.2;
-    color: #ffffff;
-    text-align: center;
+    font-size: 18px;
+    line-height: 1.15;
+    color: #111111;
   }
 
   .p-club {
-    margin-top: 2px;
-    font-size: 9px;
-    color: rgba(245,243,239,0.55);
-    text-align: center;
-    line-height: 1.2;
+    margin-top: 5px;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    font-size: 12px;
+    color: #6b6b6b;
   }
 </style>
 </head>
 <body>
-  <div class="header">
-    <img src="${logoFull}" />
-    <p class="header-title">${data.title}</p>
-  </div>
-
   ${sections}
 </body>
 </html>`;
@@ -229,6 +202,7 @@ async function main() {
 
   const data = JSON.parse(fs.readFileSync(dataPath, 'utf-8'));
   const html = buildHtml(data);
+  const logoFull = toDataUri(path.join(PUBLIC_DIR, 'logo-full.webp'));
 
   fs.mkdirSync(path.dirname(outputPath), { recursive: true });
   const htmlPath = path.join(path.dirname(outputPath), '_render.html');
@@ -243,11 +217,21 @@ async function main() {
   await page.goto('file://' + htmlPath, { waitUntil: 'networkidle' });
   await page.waitForTimeout(200);
 
+  // Repeating footer logo on every page, via Playwright's dedicated
+  // header/footer template (rendered outside the normal page content flow).
+  const footerTemplate = `
+    <div style="width:100%; font-size:0; text-align:center; padding-top:6px;">
+      <img src="${logoFull}" style="height:34px; opacity:0.85;" />
+    </div>`;
+
   await page.pdf({
     path: outputPath,
     format: 'A4',
     printBackground: true,
-    margin: { top: '0', bottom: '24px', left: '0', right: '0' },
+    displayHeaderFooter: true,
+    headerTemplate: '<div></div>',
+    footerTemplate,
+    margin: { top: '30px', bottom: '60px', left: '0', right: '0' },
   });
   await browser.close();
 
